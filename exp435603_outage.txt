@@ -1,0 +1,557 @@
+1775681527.898574;m3-21;[INFO: App       ] Sending request 0 to fd00::a569
+1775681527.914161;m3-21;[INFO: App       ] Received response 'hello 0' from fd00::a569
+1775681527.915238;m3-13;[INFO: App       ] Received request 'hello 0' from fd00::b382
+1775681527.917266;m3-13;[INFO: App       ] Sending response.
+1775681538.279201;m3-14;[INFO: App       ] Sending request 0 to fd00::a569
+1775681538.347055;m3-13;[INFO: App       ] Received request 'hello 0' from fd00::9869
+1775681538.347358;m3-13;[INFO: App       ] Sending response.
+1775681538.374858;m3-14;[INFO: App       ] Received response 'hello 0' from fd00::a569
+1775681559.692966;m3-18;[INFO: App       ] Sending request 1 to fd00::a569
+1775681559.705770;m3-13;[INFO: App       ] Received request 'hello 1' from fd00::b679
+1775681559.706111;m3-13;[INFO: App       ] Sending response.
+1775681559.724646;m3-18;[INFO: App       ] Received response 'hello 1' from fd00::a569
+1775681588.070719;m3-21;[INFO: App       ] Sending request 1 to fd00::a569
+1775681588.071916;m3-13;[INFO: App       ] Received request 'hello 1' from fd00::b382
+1775681588.074320;m3-13;[INFO: App       ] Sending response.
+1775681588.086637;m3-21;[INFO: App       ] Received response 'hello 1' from fd00::a569
+1775681597.315670;m3-14;[INFO: App       ] Sending request 1 to fd00::a569
+1775681597.335488;m3-13;[INFO: App       ] Received request 'hello 1' from fd00::9869
+1775681597.335760;m3-13;[INFO: App       ] Sending response.
+1775681597.379349;m3-14;[INFO: App       ] Received response 'hello 1' from fd00::a569
+1775681597.439167;m3-15;
+1775681597.439468;m3-15;
+1775681598.446714;m3-15;Platform starting in 1... 
+1775681598.447083;m3-15;GO!
+1775681598.447224;m3-15;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775681598.447341;m3-15;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775681598.447476;m3-15;[INFO: Main      ] - Routing: RPL Lite
+1775681598.450407;m3-15;[INFO: Main      ] - Net: sicslowpan
+1775681598.450625;m3-15;[INFO: Main      ] - MAC: CSMA
+1775681598.453298;m3-15;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775681598.453515;m3-15;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775681598.456280;m3-15;[INFO: Main      ] Node ID: 49792
+1775681598.456496;m3-15;[INFO: Main      ] Link-layer address: 0200.0000.0000.c280
+1775681598.458921;m3-15;[INFO: Main      ] Tentative link-local IPv6 address: fe80::c280
+1775681598.462185;m3-15;[INFO: IoT-LAB   ] Target: iotlab, board: m3
+1775681608.157745;m3-15;[INFO: App       ] Not reachable yet
+1775681618.841182;m3-18;[INFO: App       ] Sending request 2 to fd00::a569
+1775681618.870510;m3-13;[INFO: App       ] Received request 'hello 2' from fd00::b679
+1775681618.870830;m3-13;[INFO: App       ] Sending response.
+1775681618.920897;m3-18;[INFO: App       ] Received response 'hello 2' from fd00::a569
+1775681647.107369;m3-21;[INFO: App       ] Sending request 2 to fd00::a569
+1775681647.140497;m3-13;[INFO: App       ] Received request 'hello 2' from fd00::b382
+1775681647.140769;m3-13;[INFO: App       ] Sending response.
+1775681647.187158;m3-21;[INFO: App       ] Received response 'hello 2' from fd00::a569
+1775681657.583897;m3-14;[INFO: App       ] Sending request 2 to fd00::a569
+1775681657.619926;m3-13;[INFO: App       ] Received request 'hello 2' from fd00::9869
+1775681657.620201;m3-13;[INFO: App       ] Sending response.
+1775681657.663799;m3-14;[INFO: App       ] Received response 'hello 2' from fd00::a569
+1775681667.449722;m3-15;[INFO: App       ] Sending request 0 to fd00::a569
+1775681667.523309;m3-13;[INFO: App       ] Received request 'hello 0' from fd00::c280
+1775681667.523576;m3-13;[INFO: App       ] Sending response.
+1775681667.545630;m3-15;[INFO: App       ] Received response 'hello 0' from fd00::a569
+1775681679.013362;m3-18;[INFO: App       ] Sending request 3 to fd00::a569
+1775681679.074631;m3-13;[INFO: App       ] Received request 'hello 3' from fd00::b679
+1775681679.074904;m3-13;[INFO: App       ] Sending response.
+1775681679.125026;m3-18;[INFO: App       ] Received response 'hello 3' from fd00::a569
+1775681708.031487;m3-21;[INFO: App       ] Sending request 3 to fd00::a569
+1775681708.080885;m3-13;[INFO: App       ] Received request 'hello 3' from fd00::b382
+1775681708.081221;m3-13;[INFO: App       ] Sending response.
+1775681708.127430;m3-21;[INFO: App       ] Received response 'hello 3' from fd00::a569
+1775681716.812328;m3-14;[INFO: App       ] Sending request 3 to fd00::a569
+1775681716.848466;m3-13;[INFO: App       ] Received request 'hello 3' from fd00::9869
+1775681716.848748;m3-13;[INFO: App       ] Sending response.
+1775681716.860141;m3-14;[INFO: App       ] Received response 'hello 3' from fd00::a569
+1775681727.413548;m3-15;[INFO: App       ] Sending request 1 to fd00::a569
+1775681727.455892;m3-13;[INFO: App       ] Received request 'hello 1' from fd00::c280
+1775681727.456175;m3-13;[INFO: App       ] Sending response.
+1775681727.493251;m3-15;[INFO: App       ] Received response 'hello 1' from fd00::a569
+1775681729.282480;m3-18;
+1775681729.282794;m3-18;
+1775681730.274311;m3-18;Platform starting in 1... 
+1775681730.274646;m3-18;GO!
+1775681730.290102;m3-18;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775681730.290395;m3-18;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775681730.290528;m3-18;[INFO: Main      ] - Routing: RPL Lite
+1775681730.290638;m3-18;[INFO: Main      ] - Net: sicslowpan
+1775681730.290742;m3-18;[INFO: Main      ] - MAC: CSMA
+1775681730.293730;m3-18;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775681730.296165;m3-18;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775681730.298726;m3-18;[INFO: Main      ] Node ID: 46713
+1775681730.298900;m3-18;[INFO: Main      ] Link-layer address: 0200.0000.0000.b679
+1775681730.301090;m3-18;[INFO: Main      ] Tentative link-local IPv6 address: fe80::b679
+1775681730.301232;m3-18;[INFO: IoT-LAB   ] Target: iotlab, board: m3
+1775681751.088858;m3-18;[INFO: App       ] Not reachable yet
+1775681767.708162;m3-21;[INFO: App       ] Sending request 4 to fd00::a569
+1775681767.725488;m3-13;[INFO: App       ] Received request 'hello 4' from fd00::b382
+1775681767.725774;m3-13;[INFO: App       ] Sending response.
+1775681767.755862;m3-21;[INFO: App       ] Received response 'hello 4' from fd00::a569
+1775681777.064607;m3-14;[INFO: App       ] Sending request 4 to fd00::a569
+1775681777.132800;m3-13;[INFO: App       ] Received request 'hello 4' from fd00::9869
+1775681777.133114;m3-13;[INFO: App       ] Sending response.
+1775681777.192387;m3-14;[INFO: App       ] Received response 'hello 4' from fd00::a569
+1775681787.681258;m3-15;[INFO: App       ] Sending request 2 to fd00::a569
+1775681787.740106;m3-13;[INFO: App       ] Received request 'hello 2' from fd00::c280
+1775681787.740391;m3-13;[INFO: App       ] Sending response.
+1775681787.777101;m3-15;[INFO: App       ] Received response 'hello 2' from fd00::a569
+1775681811.517215;m3-18;[INFO: App       ] Sending request 0 to fd00::a569
+1775681811.546928;m3-13;[INFO: App       ] Received request 'hello 0' from fd00::b679
+1775681811.547203;m3-13;[INFO: App       ] Sending response.
+1775681811.596769;m3-18;[INFO: App       ] Received response 'hello 0' from fd00::a569
+1775681826.888551;m3-21;[INFO: App       ] Sending request 5 to fd00::a569
+1775681826.889971;m3-13;[INFO: App       ] Received request 'hello 5' from fd00::b382
+1775681826.892310;m3-13;[INFO: App       ] Sending response.
+1775681826.920330;m3-21;[INFO: App       ] Received response 'hello 5' from fd00::a569
+1775681837.765012;m3-14;[INFO: App       ] Sending request 5 to fd00::a569
+1775681837.765387;m3-14;[INFO: App       ] Received response 'hello 5' from fd00::a569
+1775681837.769310;m3-13;[INFO: App       ] Received request 'hello 5' from fd00::9869
+1775681837.769583;m3-13;[INFO: App       ] Sending response.
+1775681872.489387;m3-18;[INFO: App       ] Sending request 1 to fd00::a569
+1775681872.551295;m3-13;[INFO: App       ] Received request 'hello 1' from fd00::b679
+1775681872.551579;m3-13;[INFO: App       ] Sending response.
+1775681872.601216;m3-18;[INFO: App       ] Received response 'hello 1' from fd00::a569
+1775681886.436990;m3-21;[INFO: App       ] Sending request 6 to fd00::a569
+1775681886.470460;m3-13;[INFO: App       ] Received request 'hello 6' from fd00::b382
+1775681886.486333;m3-13;[INFO: App       ] Sending response.
+1775681886.500820;m3-21;[INFO: App       ] Received response 'hello 6' from fd00::a569
+1775681890.106300;m3-15;
+1775681890.106635;m3-15;
+1775681891.098553;m3-15;Platform starting in 1... 
+1775681891.098884;m3-15;GO!
+1775681891.099013;m3-15;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775681891.114045;m3-15;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775681891.114316;m3-15;[INFO: Main      ] - Routing: RPL Lite
+1775681891.114450;m3-15;[INFO: Main      ] - Net: sicslowpan
+1775681891.114561;m3-15;[INFO: Main      ] - MAC: CSMA
+1775681891.114664;m3-15;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775681891.117157;m3-15;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775681891.119383;m3-15;[INFO: Main      ] Node ID: 49792
+1775681891.121747;m3-15;[INFO: Main      ] Link-layer address: 0200.0000.0000.c280
+1775681891.124204;m3-15;[INFO: Main      ] Tentative link-local IPv6 address: fe80::c280
+1775681891.127085;m3-15;[INFO: IoT-LAB   ] Target: iotlab, board: m3
+1775681898.209260;m3-14;[INFO: App       ] Sending request 6 to fd00::a569
+1775681898.262313;m3-13;[INFO: App       ] Received request 'hello 6' from fd00::9869
+1775681898.262623;m3-13;[INFO: App       ] Sending response.
+1775681898.273085;m3-14;[INFO: App       ] Received response 'hello 6' from fd00::a569
+1775681900.825463;m3-15;[INFO: App       ] Not reachable yet
+1775681933.013643;m3-18;[INFO: App       ] Sending request 2 to fd00::a569
+1775681933.027714;m3-13;[INFO: App       ] Received request 'hello 2' from fd00::b679
+1775681933.028006;m3-13;[INFO: App       ] Sending response.
+1775681933.045330;m3-18;[INFO: App       ] Received response 'hello 2' from fd00::a569
+1775681947.425349;m3-21;[INFO: App       ] Sending request 7 to fd00::a569
+1775681947.458904;m3-13;[INFO: App       ] Received request 'hello 7' from fd00::b382
+1775681947.459184;m3-13;[INFO: App       ] Sending response.
+1775681947.473175;m3-21;[INFO: App       ] Received response 'hello 7' from fd00::a569
+1775681957.645763;m3-14;[INFO: App       ] Sending request 7 to fd00::a569
+1775681957.698304;m3-13;[INFO: App       ] Received request 'hello 7' from fd00::9869
+1775681957.698585;m3-13;[INFO: App       ] Sending response.
+1775681957.741497;m3-14;[INFO: App       ] Received response 'hello 7' from fd00::a569
+1775681960.709311;m3-15;[INFO: App       ] Sending request 0 to fd00::a569
+1775681960.722605;m3-13;[INFO: App       ] Received request 'hello 0' from fd00::c280
+1775681960.737936;m3-13;[INFO: App       ] Sending response.
+1775681960.789077;m3-15;[INFO: App       ] Received response 'hello 0' from fd00::a569
+1775682007.678452;m3-21;[INFO: App       ] Sending request 8 to fd00::a569
+1775682007.741604;m3-21;[INFO: App       ] Received response 'hello 8' from fd00::a569
+1775682007.743239;m3-13;[INFO: App       ] Received request 'hello 8' from fd00::b382
+1775682007.746656;m3-13;[INFO: App       ] Sending response.
+1775682017.978145;m3-14;[INFO: App       ] Sending request 8 to fd00::a569
+1775682018.041886;m3-14;[INFO: App       ] Received response 'hello 8' from fd00::a569
+1775682018.046596;m3-13;[INFO: App       ] Received request 'hello 8' from fd00::9869
+1775682018.046867;m3-13;[INFO: App       ] Sending response.
+1775682021.553013;m3-15;[INFO: App       ] Sending request 1 to fd00::a569
+1775682021.582483;m3-13;[INFO: App       ] Received request 'hello 1' from fd00::c280
+1775682021.582782;m3-13;[INFO: App       ] Sending response.
+1775682021.584644;m3-15;[INFO: App       ] Received response 'hello 1' from fd00::a569
+1775682027.967609;m3-18;
+1775682027.967957;m3-18;
+1775682028.959619;m3-18;Platform starting in 1... 
+1775682028.959955;m3-18;GO!
+1775682028.960100;m3-18;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775682028.960219;m3-18;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775682028.964359;m3-18;[INFO: Main      ] - Routing: RPL Lite
+1775682028.966879;m3-18;[INFO: Main      ] - Net: sicslowpan
+1775682028.969301;m3-18;[INFO: Main      ] - MAC: CSMA
+1775682028.975311;m3-18;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775682028.975568;m3-18;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775682028.975703;m3-18;[INFO: Main      ] Node ID: 46713
+1775682028.975814;m3-18;[INFO: Main      ] Link-layer address: 0200.0000.0000.b679
+1775682028.978023;m3-18;[INFO: Main      ] Tentative link-local IPv6 address: fe80::b679
+1775682028.980273;m3-18;[INFO: IoT-LAB   ] Target: iotlab, board: m3
+1775682049.758265;m3-18;[INFO: App       ] Sending request 0 to fd00::a569
+1775682049.868996;m3-13;[INFO: App       ] Received request 'hello 0' from fd00::b679
+1775682049.869359;m3-13;[INFO: App       ] Sending response.
+1775682049.886078;m3-18;[INFO: App       ] Received response 'hello 0' from fd00::a569
+1775682067.674341;m3-21;[INFO: App       ] Sending request 9 to fd00::a569
+1775682067.675805;m3-13;[INFO: App       ] Received request 'hello 9' from fd00::b382
+1775682067.676063;m3-13;[INFO: App       ] Sending response.
+1775682067.690115;m3-21;[INFO: App       ] Received response 'hello 9' from fd00::a569
+1775682077.846570;m3-14;[INFO: App       ] Sending request 9 to fd00::a569
+1775682077.851275;m3-13;[INFO: App       ] Received request 'hello 9' from fd00::9869
+1775682077.851640;m3-13;[INFO: App       ] Sending response.
+1775682077.894114;m3-14;[INFO: App       ] Received response 'hello 9' from fd00::a569
+1775682080.940823;m3-15;[INFO: App       ] Sending request 2 to fd00::a569
+1775682080.986907;m3-13;[INFO: App       ] Received request 'hello 2' from fd00::c280
+1775682080.987099;m3-13;[INFO: App       ] Sending response.
+1775682081.020380;m3-15;[INFO: App       ] Received response 'hello 2' from fd00::a569
+1775682109.930519;m3-18;[INFO: App       ] Sending request 1 to fd00::a569
+1775682110.009397;m3-13;[INFO: App       ] Received request 'hello 1' from fd00::b679
+1775682110.009709;m3-13;[INFO: App       ] Sending response.
+1775682110.058286;m3-18;[INFO: App       ] Received response 'hello 1' from fd00::a569
+1775682127.894758;m3-21;[INFO: App       ] Sending request 10 to fd00::a569
+1775682127.944336;m3-13;[INFO: App       ] Received request 'hello 10' from fd00::b382
+1775682127.944644;m3-13;[INFO: App       ] Sending response.
+1775682127.974470;m3-21;[INFO: App       ] Received response 'hello 10' from fd00::a569
+1775682136.994768;m3-14;[INFO: App       ] Sending request 10 to fd00::a569
+1775682137.047791;m3-13;[INFO: App       ] Received request 'hello 10' from fd00::9869
+1775682137.048086;m3-13;[INFO: App       ] Sending response.
+1775682137.074525;m3-14;[INFO: App       ] Received response 'hello 10' from fd00::a569
+1775682163.799355;m3-15;
+1775682163.799716;m3-15;
+1775682164.790933;m3-15;Platform starting in 1... 
+1775682164.792390;m3-15;GO!
+1775682164.792663;m3-15;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775682164.806841;m3-15;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775682164.807127;m3-15;[INFO: Main      ] - Routing: RPL Lite
+1775682164.807261;m3-15;[INFO: Main      ] - Net: sicslowpan
+1775682164.807372;m3-15;[INFO: Main      ] - MAC: CSMA
+1775682164.807478;m3-15;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775682164.810218;m3-15;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775682164.812516;m3-15;[INFO: Main      ] Node ID: 49792
+1775682164.814614;m3-15;[INFO: Main      ] Link-layer address: 0200.0000.0000.c280
+1775682164.816479;m3-15;[INFO: Main      ] Tentative link-local IPv6 address: fe80::c280
+1775682164.818376;m3-15;[INFO: IoT-LAB   ] Target: iotlab, board: m3
+1775682169.878700;m3-18;[INFO: App       ] Sending request 2 to fd00::a569
+1775682169.941914;m3-13;[INFO: App       ] Received request 'hello 2' from fd00::b679
+1775682169.942244;m3-13;[INFO: App       ] Sending response.
+1775682170.006507;m3-18;[INFO: App       ] Received response 'hello 2' from fd00::a569
+1775682174.518342;m3-15;[INFO: App       ] Not reachable yet
+1775682188.515053;m3-21;[INFO: App       ] Sending request 11 to fd00::a569
+1775682188.564738;m3-13;[INFO: App       ] Received request 'hello 11' from fd00::b382
+1775682188.565128;m3-13;[INFO: App       ] Sending response.
+1775682188.578806;m3-21;[INFO: App       ] Received response 'hello 11' from fd00::a569
+1775682196.655287;m3-14;[INFO: App       ] Sending request 11 to fd00::a569
+1775682196.676331;m3-13;[INFO: App       ] Received request 'hello 11' from fd00::9869
+1775682196.676614;m3-13;[INFO: App       ] Sending response.
+1775682196.735070;m3-14;[INFO: App       ] Received response 'hello 11' from fd00::a569
+1775682229.266989;m3-18;[INFO: App       ] Sending request 3 to fd00::a569
+1775682229.346578;m3-13;[INFO: App       ] Received request 'hello 3' from fd00::b679
+1775682229.347007;m3-13;[INFO: App       ] Sending response.
+1775682229.410819;m3-18;[INFO: App       ] Received response 'hello 3' from fd00::a569
+1775682234.402351;m3-15;[INFO: App       ] Sending request 0 to fd00::a569
+1775682234.530171;m3-13;[INFO: App       ] Received request 'hello 0' from fd00::c280
+1775682234.530509;m3-13;[INFO: App       ] Sending response.
+1775682234.658004;m3-15;[INFO: App       ] Received response 'hello 0' from fd00::a569
+1775682249.199457;m3-21;[INFO: App       ] Sending request 12 to fd00::a569
+1775682249.265231;m3-13;[INFO: App       ] Received request 'hello 12' from fd00::b382
+1775682249.265531;m3-13;[INFO: App       ] Sending response.
+1775682249.295158;m3-21;[INFO: App       ] Received response 'hello 12' from fd00::a569
+1775682289.167341;m3-18;[INFO: App       ] Sending request 4 to fd00::a569
+1775682294.366060;m3-15;[INFO: App       ] Sending request 1 to fd00::a569
+1775682297.641499;m3-14;
+1775682297.641901;m3-14;
+1775682298.646891;m3-14;Platform starting in 1... 
+1775682298.647242;m3-14;GO!
+1775682298.647385;m3-14;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775682298.647500;m3-14;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775682298.647607;m3-14;[INFO: Main      ] - Routing: RPL Lite
+1775682298.650361;m3-14;[INFO: Main      ] - Net: sicslowpan
+1775682298.653155;m3-14;[INFO: Main      ] - MAC: CSMA
+1775682298.655998;m3-14;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775682298.658692;m3-14;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775682298.661316;m3-14;[INFO: Main      ] Node ID: 39017
+1775682298.663726;m3-14;[INFO: Main      ] Link-layer address: 0200.0000.0000.9869
+1775682298.666811;m3-14;[INFO: Main      ] Tentative link-local IPv6 address: fe80::9869
+1775682298.669271;m3-14;[INFO: IoT-LAB   ] Target: iotlab, board: m3
+1775682308.635892;m3-21;[INFO: App       ] Sending request 13 to fd00::a569
+1775682308.653724;m3-13;[INFO: App       ] Received request 'hello 13' from fd00::b382
+1775682308.654037;m3-13;[INFO: App       ] Sending response.
+1775682308.683609;m3-21;[INFO: App       ] Received response 'hello 13' from fd00::a569
+1775682349.163530;m3-18;[INFO: App       ] Sending request 5 to fd00::a569
+1775682349.179347;m3-13;[INFO: App       ] Received request 'hello 5' from fd00::b679
+1775682349.179655;m3-13;[INFO: App       ] Sending response.
+1775682349.179834;m3-18;[INFO: App       ] Received response 'hello 5' from fd00::a569
+1775682354.634354;m3-15;[INFO: App       ] Sending request 2 to fd00::a569
+1775682354.649567;m3-15;[INFO: App       ] Received response 'hello 2' from fd00::a569
+1775682354.650941;m3-13;[INFO: App       ] Received request 'hello 2' from fd00::c280
+1775682354.653254;m3-13;[INFO: App       ] Sending response.
+1775682357.986479;m3-14;[INFO: App       ] Sending request 0 to fd00::a569
+1775682358.074695;m3-13;[INFO: App       ] Received request 'hello 0' from fd00::9869
+1775682358.075001;m3-13;[INFO: App       ] Sending response.
+1775682358.146278;m3-14;[INFO: App       ] Received response 'hello 0' from fd00::a569
+1775682369.368364;m3-21;[INFO: App       ] Sending request 14 to fd00::a569
+1775682369.384043;m3-21;[INFO: App       ] Received response 'hello 14' from fd00::a569
+1775682369.386182;m3-13;[INFO: App       ] Received request 'hello 14' from fd00::b382
+1775682369.387622;m3-13;[INFO: App       ] Sending response.
+1775682409.591834;m3-18;[INFO: App       ] Sending request 6 to fd00::a569
+1775682409.655843;m3-13;[INFO: App       ] Received request 'hello 6' from fd00::b679
+1775682409.656131;m3-13;[INFO: App       ] Sending response.
+1775682409.719698;m3-18;[INFO: App       ] Received response 'hello 6' from fd00::a569
+1775682417.022636;m3-14;[INFO: App       ] Sending request 1 to fd00::a569
+1775682417.111332;m3-13;[INFO: App       ] Received request 'hello 1' from fd00::9869
+1775682417.111612;m3-13;[INFO: App       ] Sending response.
+1775682417.150577;m3-14;[INFO: App       ] Received response 'hello 1' from fd00::a569
+1775682430.036639;m3-21;[INFO: App       ] Sending request 15 to fd00::a569
+1775682430.038685;m3-13;[INFO: App       ] Received request 'hello 15' from fd00::b382
+1775682430.041474;m3-13;[INFO: App       ] Sending response.
+1775682430.084433;m3-21;[INFO: App       ] Received response 'hello 15' from fd00::a569
+1775682441.524209;m3-15;
+1775682441.524558;m3-15;
+1775682442.515663;m3-15;Platform starting in 1... 
+1775682442.516016;m3-15;GO!
+1775682442.516163;m3-15;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775682442.531536;m3-15;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775682442.531806;m3-15;[INFO: Main      ] - Routing: RPL Lite
+1775682442.531939;m3-15;[INFO: Main      ] - Net: sicslowpan
+1775682442.532050;m3-15;[INFO: Main      ] - MAC: CSMA
+1775682442.532157;m3-15;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775682442.535022;m3-15;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775682442.537630;m3-15;[INFO: Main      ] Node ID: 49792
+1775682442.540226;m3-15;[INFO: Main      ] Link-layer address: 0200.0000.0000.c280
+1775682442.542521;m3-15;[INFO: Main      ] Tentative link-local IPv6 address: fe80::c280
+1775682442.544860;m3-15;[INFO: IoT-LAB   ] Target: iotlab, board: m3
+1775682452.243011;m3-15;[INFO: App       ] Not reachable yet
+1775682470.500031;m3-18;[INFO: App       ] Sending request 7 to fd00::a569
+1775682470.532327;m3-13;[INFO: App       ] Received request 'hello 7' from fd00::b679
+1775682470.532601;m3-13;[INFO: App       ] Sending response.
+1775682470.579827;m3-18;[INFO: App       ] Received response 'hello 7' from fd00::a569
+1775682477.291255;m3-14;[INFO: App       ] Sending request 2 to fd00::a569
+1775682477.363731;m3-13;[INFO: App       ] Received request 'hello 2' from fd00::9869
+1775682477.364008;m3-13;[INFO: App       ] Sending response.
+1775682477.370981;m3-14;[INFO: App       ] Received response 'hello 2' from fd00::a569
+1775682489.697127;m3-21;[INFO: App       ] Sending request 16 to fd00::a569
+1775682489.731136;m3-13;[INFO: App       ] Received request 'hello 16' from fd00::b382
+1775682489.731416;m3-13;[INFO: App       ] Sending response.
+1775682489.744877;m3-21;[INFO: App       ] Received response 'hello 16' from fd00::a569
+1775682530.992254;m3-18;[INFO: App       ] Sending request 8 to fd00::a569
+1775682531.008737;m3-13;[INFO: App       ] Received request 'hello 8' from fd00::b679
+1775682531.009018;m3-13;[INFO: App       ] Sending response.
+1775682531.024032;m3-18;[INFO: App       ] Received response 'hello 8' from fd00::a569
+1775682537.767536;m3-14;[INFO: App       ] Sending request 3 to fd00::a569
+1775682537.856364;m3-13;[INFO: App       ] Received request 'hello 3' from fd00::9869
+1775682537.856641;m3-13;[INFO: App       ] Sending response.
+1775682537.943297;m3-14;[INFO: App       ] Received response 'hello 3' from fd00::a569
+1775682550.125546;m3-21;[INFO: App       ] Sending request 17 to fd00::a569
+1775682550.157315;m3-21;[INFO: App       ] Received response 'hello 17' from fd00::a569
+1775682550.159265;m3-13;[INFO: App       ] Received request 'hello 17' from fd00::b382
+1775682550.160714;m3-13;[INFO: App       ] Sending response.
+1775682567.402970;m3-15;
+1775682567.403308;m3-15;
+1775682568.410943;m3-15;Platform starting in 1... 
+1775682568.411278;m3-15;GO!
+1775682568.411417;m3-15;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775682568.411531;m3-15;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775682568.411637;m3-15;[INFO: Main      ] - Routing: RPL Lite
+1775682568.411734;m3-15;[INFO: Main      ] - Net: sicslowpan
+1775682568.414774;m3-15;[INFO: Main      ] - MAC: CSMA
+1775682568.417711;m3-15;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775682568.420273;m3-15;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775682568.422932;m3-15;[INFO: Main      ] Node ID: 49792
+1775682568.426479;m3-15;[INFO: Main      ] Link-layer address: 0200.0000.0000.c280
+1775682568.428198;m3-15;[INFO: Main      ] Tentative link-local IPv6 address: fe80::c280
+1775682568.430742;m3-15;[INFO: IoT-LAB   ] Target: iotlab, board: m3
+1775682578.137985;m3-15;[INFO: App       ] Not reachable yet
+1775682591.260452;m3-18;[INFO: App       ] Sending request 9 to fd00::a569
+1775682591.308200;m3-18;[INFO: App       ] Received response 'hello 9' from fd00::a569
+1775682591.308994;m3-13;[INFO: App       ] Received request 'hello 9' from fd00::b679
+1775682591.312029;m3-13;[INFO: App       ] Sending response.
+1775682597.987854;m3-14;[INFO: App       ] Sending request 4 to fd00::a569
+1775682598.076810;m3-13;[INFO: App       ] Received request 'hello 4' from fd00::9869
+1775682598.077136;m3-13;[INFO: App       ] Sending response.
+1775682598.147659;m3-14;[INFO: App       ] Received response 'hello 4' from fd00::a569
+1775682611.081762;m3-21;[INFO: App       ] Sending request 18 to fd00::a569
+1775682611.082114;m3-21;[INFO: App       ] Received response 'hello 18' from fd00::a569
+1775682611.083917;m3-13;[INFO: App       ] Received request 'hello 18' from fd00::b382
+1775682611.088112;m3-13;[INFO: App       ] Sending response.
+1775682638.326126;m3-15;[INFO: App       ] Sending request 0 to fd00::a569
+1775682638.373838;m3-15;[INFO: App       ] Received response 'hello 0' from fd00::a569
+1775682638.378342;m3-13;[INFO: App       ] Received request 'hello 0' from fd00::c280
+1775682638.378606;m3-13;[INFO: App       ] Sending response.
+1775682651.240752;m3-18;[INFO: App       ] Sending request 10 to fd00::a569
+1775682651.289720;m3-13;[INFO: App       ] Received request 'hello 10' from fd00::b679
+1775682651.290032;m3-13;[INFO: App       ] Sending response.
+1775682651.336519;m3-18;[INFO: App       ] Received response 'hello 10' from fd00::a569
+1775682658.688163;m3-14;[INFO: App       ] Sending request 5 to fd00::a569
+1775682658.745089;m3-13;[INFO: App       ] Received request 'hello 5' from fd00::9869
+1775682658.745386;m3-13;[INFO: App       ] Sending response.
+1775682658.799948;m3-14;[INFO: App       ] Received response 'hello 5' from fd00::a569
+1775682670.630390;m3-21;[INFO: App       ] Sending request 19 to fd00::a569
+1775682670.664496;m3-13;[INFO: App       ] Received request 'hello 19' from fd00::b382
+1775682670.680321;m3-13;[INFO: App       ] Sending response.
+1775682670.726107;m3-21;[INFO: App       ] Received response 'hello 19' from fd00::a569
+1775682698.273865;m3-15;[INFO: App       ] Sending request 1 to fd00::a569
+1775682698.294868;m3-13;[INFO: App       ] Received request 'hello 1' from fd00::c280
+1775682698.295146;m3-13;[INFO: App       ] Sending response.
+1775682698.353596;m3-15;[INFO: App       ] Received response 'hello 1' from fd00::a569
+1775682706.253204;m3-14;
+1775682706.253538;m3-14;
+1775682707.245314;m3-14;Platform starting in 1... 
+1775682707.245638;m3-14;GO!
+1775682707.245809;m3-14;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775682707.245931;m3-14;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775682707.246037;m3-14;[INFO: Main      ] - Routing: RPL Lite
+1775682707.249267;m3-14;[INFO: Main      ] - Net: sicslowpan
+1775682707.252510;m3-14;[INFO: Main      ] - MAC: CSMA
+1775682707.261123;m3-14;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775682707.261393;m3-14;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775682707.261540;m3-14;[INFO: Main      ] Node ID: 39017
+1775682707.261653;m3-14;[INFO: Main      ] Link-layer address: 0200.0000.0000.9869
+1775682707.264763;m3-14;[INFO: Main      ] Tentative link-local IPv6 address: fe80::9869
+1775682707.267943;m3-14;[INFO: IoT-LAB   ] Target: iotlab, board: m3
+1775682712.181011;m3-18;[INFO: App       ] Sending request 11 to fd00::a569
+1775682712.244750;m3-18;[INFO: App       ] Received response 'hello 11' from fd00::a569
+1775682712.246104;m3-13;[INFO: App       ] Received request 'hello 11' from fd00::b679
+1775682712.248737;m3-13;[INFO: App       ] Sending response.
+1775682730.066566;m3-21;[INFO: App       ] Sending request 20 to fd00::a569
+1775682730.101113;m3-13;[INFO: App       ] Received request 'hello 20' from fd00::b382
+1775682730.101384;m3-13;[INFO: App       ] Sending response.
+1775682730.146504;m3-21;[INFO: App       ] Received response 'hello 20' from fd00::a569
+1775682758.557543;m3-15;[INFO: App       ] Sending request 2 to fd00::a569
+1775682758.611170;m3-13;[INFO: App       ] Received request 'hello 2' from fd00::c280
+1775682758.611489;m3-13;[INFO: App       ] Sending response.
+1775682758.621427;m3-15;[INFO: App       ] Received response 'hello 2' from fd00::a569
+1775682766.585706;m3-14;[INFO: App       ] Sending request 0 to fd00::a569
+1775682766.626955;m3-13;[INFO: App       ] Received request 'hello 0' from fd00::9869
+1775682766.627234;m3-13;[INFO: App       ] Sending response.
+1775682766.665246;m3-14;[INFO: App       ] Received response 'hello 0' from fd00::a569
+1775682772.625185;m3-18;[INFO: App       ] Sending request 12 to fd00::a569
+1775682772.626408;m3-13;[INFO: App       ] Received request 'hello 12' from fd00::b679
+1775682772.626581;m3-13;[INFO: App       ] Sending response.
+1775682772.688678;m3-18;[INFO: App       ] Received response 'hello 12' from fd00::a569
+1775682816.093851;m3-21;
+1775682816.094215;m3-21;
+1775682817.100039;m3-21;Platform starting in 1... 
+1775682817.100397;m3-21;GO!
+1775682817.100547;m3-21;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775682817.100662;m3-21;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775682817.104666;m3-21;[INFO: Main      ] - Routing: RPL Lite
+1775682817.107834;m3-21;[INFO: Main      ] - Net: sicslowpan
+1775682817.110888;m3-21;[INFO: Main      ] - MAC: CSMA
+1775682817.113993;m3-21;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775682817.116711;m3-21;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775682817.119380;m3-21;[INFO: Main      ] Node ID: 45954
+1775682817.121559;m3-21;[INFO: Main      ] Link-layer address: 0200.0000.0000.b382
+1775682817.123886;m3-21;[INFO: Main      ] Tentative link-local IPv6 address: fe80::b382
+1775682817.126608;m3-21;[INFO: IoT-LAB   ] Target: iotlab, board: m3
+1775682818.265496;m3-15;[INFO: App       ] Sending request 3 to fd00::a569
+1775682818.271966;m3-13;[INFO: App       ] Received request 'hello 3' from fd00::c280
+1775682818.272240;m3-13;[INFO: App       ] Sending response.
+1775682818.297218;m3-15;[INFO: App       ] Received response 'hello 3' from fd00::a569
+1775682826.390017;m3-14;[INFO: App       ] Sending request 1 to fd00::a569
+1775682826.399287;m3-13;[INFO: App       ] Received request 'hello 1' from fd00::9869
+1775682826.399551;m3-13;[INFO: App       ] Sending response.
+1775682826.437933;m3-14;[INFO: App       ] Received response 'hello 1' from fd00::a569
+1775682832.621497;m3-18;[INFO: App       ] Sending request 13 to fd00::a569
+1775682832.654915;m3-13;[INFO: App       ] Received request 'hello 13' from fd00::b679
+1775682832.655198;m3-13;[INFO: App       ] Sending response.
+1775682832.669222;m3-18;[INFO: App       ] Received response 'hello 13' from fd00::a569
+1775682866.008687;m3-21;[INFO: App       ] Sending request 0 to fd00::a569
+1775682866.045183;m3-13;[INFO: App       ] Received request 'hello 0' from fd00::b382
+1775682866.060868;m3-13;[INFO: App       ] Sending response.
+1775682866.136486;m3-21;[INFO: App       ] Received response 'hello 0' from fd00::a569
+1775682877.285339;m3-15;[INFO: App       ] Sending request 4 to fd00::a569
+1775682877.308341;m3-13;[INFO: App       ] Received request 'hello 4' from fd00::c280
+1775682877.308621;m3-13;[INFO: App       ] Sending response.
+1775682877.317158;m3-15;[INFO: App       ] Received response 'hello 4' from fd00::a569
+1775682885.954460;m3-14;[INFO: App       ] Sending request 2 to fd00::a569
+1775682885.979777;m3-13;[INFO: App       ] Received request 'hello 2' from fd00::9869
+1775682885.980077;m3-13;[INFO: App       ] Sending response.
+1775682886.034226;m3-14;[INFO: App       ] Received response 'hello 2' from fd00::a569
+1775682919.944289;m3-18;
+1775682919.944615;m3-18;
+1775682920.949346;m3-18;Platform starting in 1... 
+1775682920.949691;m3-18;GO!
+1775682920.949871;m3-18;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775682920.949990;m3-18;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775682920.950099;m3-18;[INFO: Main      ] - Routing: RPL Lite
+1775682920.953176;m3-18;[INFO: Main      ] - Net: sicslowpan
+1775682920.955641;m3-18;[INFO: Main      ] - MAC: CSMA
+1775682920.958100;m3-18;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775682920.959960;m3-18;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775682920.960119;m3-18;[INFO: Main      ] Node ID: 46713
+1775682920.962414;m3-18;[INFO: Main      ] Link-layer address: 0200.0000.0000.b679
+1775682920.964714;m3-18;[INFO: Main      ] Tentative link-local IPv6 address: fe80::b679
+1775682920.966980;m3-18;[INFO: IoT-LAB   ] Target: iotlab, board: m3
+1775682926.165087;m3-21;[INFO: App       ] Sending request 1 to fd00::a569
+1775682926.249623;m3-13;[INFO: App       ] Received request 'hello 1' from fd00::b382
+1775682926.249953;m3-13;[INFO: App       ] Sending response.
+1775682926.308972;m3-21;[INFO: App       ] Received response 'hello 1' from fd00::a569
+1775682936.961185;m3-15;[INFO: App       ] Sending request 5 to fd00::a569
+1775682937.016975;m3-13;[INFO: App       ] Received request 'hello 5' from fd00::c280
+1775682937.017284;m3-13;[INFO: App       ] Sending response.
+1775682937.024831;m3-15;[INFO: App       ] Received response 'hello 5' from fd00::a569
+1775682941.747580;m3-18;[INFO: App       ] Not reachable yet
+1775682946.206761;m3-14;[INFO: App       ] Sending request 3 to fd00::a569
+1775682946.280219;m3-13;[INFO: App       ] Received request 'hello 3' from fd00::9869
+1775682946.280494;m3-13;[INFO: App       ] Sending response.
+1775682946.286564;m3-14;[INFO: App       ] Received response 'hello 3' from fd00::a569
+1775682987.041542;m3-21;[INFO: App       ] Sending request 2 to fd00::a569
+1775682987.126079;m3-13;[INFO: App       ] Received request 'hello 2' from fd00::b382
+1775682987.141808;m3-13;[INFO: App       ] Sending response.
+1775682987.169288;m3-21;[INFO: App       ] Received response 'hello 2' from fd00::a569
+1775682996.013164;m3-15;[INFO: App       ] Sending request 6 to fd00::a569
+1775682996.021536;m3-13;[INFO: App       ] Received request 'hello 6' from fd00::c280
+1775682996.021845;m3-13;[INFO: App       ] Sending response.
+1775682996.028850;m3-15;[INFO: App       ] Received response 'hello 6' from fd00::a569
+1775683005.626640;m3-14;[INFO: App       ] Sending request 4 to fd00::a569
+1775683005.668803;m3-13;[INFO: App       ] Received request 'hello 4' from fd00::9869
+1775683005.669119;m3-13;[INFO: App       ] Sending response.
+1775683005.722626;m3-14;[INFO: App       ] Received response 'hello 4' from fd00::a569
+1775683046.734415;m3-21;[INFO: App       ] Sending request 3 to fd00::a569
+1775683046.754627;m3-13;[INFO: App       ] Received request 'hello 3' from fd00::b382
+1775683046.754901;m3-13;[INFO: App       ] Sending response.
+1775683046.797583;m3-21;[INFO: App       ] Received response 'hello 3' from fd00::a569
+1775683054.780558;m3-18;
+1775683054.780897;m3-18;
+1775683055.787148;m3-18;Platform starting in 1... 
+1775683055.787502;m3-18;GO!
+1775683055.787653;m3-18;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775683055.787769;m3-18;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775683055.791948;m3-18;[INFO: Main      ] - Routing: RPL Lite
+1775683055.794612;m3-18;[INFO: Main      ] - Net: sicslowpan
+1775683055.797364;m3-18;[INFO: Main      ] - MAC: CSMA
+1775683055.800486;m3-18;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775683055.803473;m3-18;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775683055.806180;m3-18;[INFO: Main      ] Node ID: 46713
+1775683055.808762;m3-18;[INFO: Main      ] Link-layer address: 0200.0000.0000.b679
+1775683055.811341;m3-18;[INFO: Main      ] Tentative link-local IPv6 address: fe80::b679
+1775683055.813729;m3-18;[INFO: IoT-LAB   ] Target: iotlab, board: m3
+1775683056.530059;m3-13;[INFO: App       ] Received request 'hello 7' from fd00::c280
+1775683056.530403;m3-13;[INFO: App       ] Sending response.
+1775683056.536887;m3-15;[INFO: App       ] Sending request 7 to fd00::a569
+1775683056.568601;m3-15;[INFO: App       ] Received response 'hello 7' from fd00::a569
+1775683066.487452;m3-14;[INFO: App       ] Sending request 5 to fd00::a569
+1775683066.497422;m3-13;[INFO: App       ] Received request 'hello 5' from fd00::9869
+1775683066.497717;m3-13;[INFO: App       ] Sending response.
+1775683066.519233;m3-14;[INFO: App       ] Received response 'hello 5' from fd00::a569
+1775683076.585246;m3-18;[INFO: App       ] Not reachable yet
+1775683106.586393;m3-21;[INFO: App       ] Sending request 4 to fd00::a569
+1775683106.670968;m3-13;[INFO: App       ] Received request 'hello 4' from fd00::b382
+1775683106.671235;m3-13;[INFO: App       ] Sending response.
+1775683106.730450;m3-21;[INFO: App       ] Received response 'hello 4' from fd00::a569
+1775683116.324753;m3-15;[INFO: App       ] Sending request 8 to fd00::a569
+1775683116.334400;m3-13;[INFO: App       ] Received request 'hello 8' from fd00::c280
+1775683116.334683;m3-13;[INFO: App       ] Sending response.
+1775683116.388614;m3-15;[INFO: App       ] Received response 'hello 8' from fd00::a569
+1775683126.803772;m3-14;[INFO: App       ] Sending request 6 to fd00::a569
+1775683126.829840;m3-13;[INFO: App       ] Received request 'hello 6' from fd00::9869
+1775683126.830122;m3-13;[INFO: App       ] Sending response.
+1775683126.835512;m3-14;[INFO: App       ] Received response 'hello 6' from fd00::a569
+1775683136.629477;m3-18;[INFO: App       ] Sending request 0 to fd00::a569
+1775683136.653257;m3-13;[INFO: App       ] Received request 'hello 0' from fd00::b679
+1775683136.653557;m3-13;[INFO: App       ] Sending response.
+1775683136.677199;m3-18;[INFO: App       ] Received response 'hello 0' from fd00::a569
+1775683161.767022;m3-21;
+1775683161.767374;m3-21;
+1775683162.775065;m3-21;Platform starting in 1... 
+1775683162.775406;m3-21;GO!
+1775683162.775544;m3-21;[in clock_init() DEBUG] Starting systick timer at 100Hz
+1775683162.775661;m3-21;[INFO: Main      ] Starting Contiki-NG-release/v4.4-dirty
+1775683162.775767;m3-21;[INFO: Main      ] - Routing: RPL Lite
+1775683162.775866;m3-21;[INFO: Main      ] - Net: sicslowpan
+1775683162.775962;m3-21;[INFO: Main      ] - MAC: CSMA
+1775683162.776057;m3-21;[INFO: Main      ] - 802.15.4 PANID: 0xabcd
+1775683162.776154;m3-21;[INFO: Main      ] - 802.15.4 Default channel: 26
+1775683162.776251;m3-21;[INFO: Main      ] Node ID: 45954
+1775683162.776345;m3-21;[INFO: Main      ] Link-layer address: 0200.0000.0000.b382
+1775683162.790794;m3-21;[INFO: Main      ] Tentative link-local IPv6 address: fe80::b382
+1775683162.791062;m3-21;[INFO: IoT-LAB   ] Target: iotlab, board: m3

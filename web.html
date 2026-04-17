@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIT IoT-LAB · Experiment 435603</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e17;
+    --surface: #111827;
+    --surface2: #1a2236;
+    --border: rgba(99,179,237,0.15);
+    --accent: #63b3ed;
+    --accent2: #68d391;
+    --accent3: #f6ad55;
+    --accent4: #fc8181;
+    --text: #e2e8f0;
+    --text-muted: #718096;
+    --text-dim: #4a5568;
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'IBM Plex Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(99,179,237,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,179,237,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 2rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Header */
+  header {
+    padding: 2rem 0 1.5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .header-left {}
+
+  .exp-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .exp-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent2);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -.02em;
+    color: #fff;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .header-meta {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.9;
+    text-align: right;
+  }
+
+  /* Section labels */
+  .section-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* KPI cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 12px;
+    margin-bottom: 2rem;
+  }
+
+  .kpi {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+
+  .kpi:hover { border-color: rgba(99,179,237,0.35); }
+
+  .kpi::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--kpi-color, var(--accent));
+  }
+
+  .kpi-label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+
+  .kpi-value {
+    font-size: 30px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .kpi-unit {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--text-muted);
+  }
+
+  .kpi-sub {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 8px;
+  }
+
+  /* Charts grid */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 2rem;
+  }
+
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+
+  .chart-card.wide {
+    grid-column: 1 / -1;
+  }
+
+  .chart-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: .06em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .chart-title-text { color: var(--text); font-size: 13px; font-family: var(--sans); font-weight: 500; }
+
+  /* Node panel */
+  .node-panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 2rem;
+  }
+
+  .node-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .node-item {
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .node-circle {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    border: 1.5px solid;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    margin: 0 auto 6px;
+    transition: all .2s;
+    position: relative;
+  }
+
+  .node-circle:hover { transform: scale(1.1); }
+
+  .node-circle.active   { background: rgba(99,179,237,0.1);  border-color: var(--accent);  color: var(--accent); }
+  .node-circle.no-data  { background: rgba(113,128,150,0.1); border-color: var(--text-dim); color: var(--text-dim); }
+
+  .node-name {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  .node-avg {
+    font-size: 11px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+
+  /* Node detail panel */
+  .node-detail {
+    margin-top: 16px;
+    padding: 14px 16px;
+    background: var(--surface2);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    display: none;
+  }
+
+  .node-detail.visible { display: block; }
+
+  .node-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .detail-item { }
+  .detail-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--text-dim);
+    margin-bottom: 3px;
+  }
+  .detail-value {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 14px;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+  }
+
+  /* Node selector tabs */
+  .node-tabs {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .node-tab {
+    font-family: var(--mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .15s;
+  }
+
+  .node-tab:hover { border-color: var(--accent); color: var(--accent); }
+  .node-tab.active { background: rgba(99,179,237,0.1); border-color: var(--accent); color: var(--accent); }
+
+  /* Radio table */
+  .radio-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--mono);
+    font-size: 12px;
+    margin-top: 12px;
+  }
+
+  .radio-table th {
+    text-align: left;
+    padding: 6px 12px;
+    color: var(--text-dim);
+    font-size: 10px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    font-weight: 400;
+  }
+
+  .radio-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid rgba(99,179,237,0.06);
+    color: var(--text-muted);
+  }
+
+  .radio-table tr:hover td { background: var(--surface2); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-family: var(--mono);
+  }
+
+  .badge-blue { background: rgba(99,179,237,0.15); color: var(--accent); }
+  .badge-green { background: rgba(104,211,145,0.15); color: var(--accent2); }
+
+  /* Power bar for table */
+  .power-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .power-bar {
+    width: 80px; height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .power-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: var(--accent);
+  }
+
+  /* Footer */
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 1.5rem;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  @media (max-width: 768px) {
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .charts-grid { grid-template-columns: 1fr; }
+    .node-grid { grid-template-columns: repeat(3, 1fr); }
+    .node-detail-grid { grid-template-columns: 1fr 1fr; }
+    header { flex-direction: column; align-items: flex-start; }
+    .header-meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <header>
+    <div class="header-left">
+      <div class="exp-tag">FIT IoT-LAB · Grenoble · Live data</div>
+      <h1>Experiment <span>#435603</span></h1>
+    </div>
+    <div class="header-meta">
+      <div>Experiment: alshami-435603</div>
+      <div>Date: 2026-04-08 · Duration: ~30 min</div>
+      <div>Nodes: m3_13, m3_14, m3_15, m3_18, m3_21</div>
+      <div>Channel: 11 · Protocol: IEEE 802.15.4</div>
+    </div>
+  </header>
+
+  <!-- KPI Cards -->
+  <div class="section-label">Key metrics</div>
+  <div class="kpi-grid">
+    <div class="kpi" style="--kpi-color: #63b3ed;">
+      <div class="kpi-label">Avg power (active nodes)</div>
+      <div class="kpi-value">92.7<span class="kpi-unit"> mW</span></div>
+      <div class="kpi-sub">Peak: 107.08 mW · Min: 14.48 mW</div>
+    </div>
+    <div class="kpi" style="--kpi-color: #68d391;">
+      <div class="kpi-label">Radio activity</div>
+      <div class="kpi-value">1805<span class="kpi-unit"> ev</span></div>
+      <div class="kpi-sub">Per node · Channel 11 · RSSI −91 dBm</div>
+    </div>
+    <div class="kpi" style="--kpi-color: #f6ad55;">
+      <div class="kpi-label">Active nodes</div>
+      <div class="kpi-value">4<span class="kpi-unit"> / 5</span></div>
+      <div class="kpi-sub">m3_18: no consumption data</div>
+    </div>
+    <div class="kpi" style="--kpi-color: #fc8181;">
+      <div class="kpi-label">Experiment duration</div>
+      <div class="kpi-value">30.2<span class="kpi-unit"> min</span></div>
+      <div class="kpi-sub">~27k power samples per node</div>
+    </div>
+  </div>
+
+  <!-- Power Chart -->
+  <div class="section-label">Power consumption over time</div>
+  <div class="chart-card wide" style="margin-bottom: 14px;">
+    <div class="chart-title">
+      <span class="chart-title-text">Per-node power consumption (mW) · 60s buckets</span>
+      <div class="node-tabs" id="powerTabs">
+        <button class="node-tab active" onclick="toggleNode(this,'m3_13')">m3_13</button>
+        <button class="node-tab active" onclick="toggleNode(this,'m3_14')">m3_14</button>
+        <button class="node-tab active" onclick="toggleNode(this,'m3_15')">m3_15</button>
+        <button class="node-tab active" onclick="toggleNode(this,'m3_21')">m3_21</button>
+      </div>
+    </div>
+    <div style="position:relative; height:240px;">
+      <canvas id="powerChart" role="img" aria-label="Line chart of power consumption per node over 30 minutes">Power ranges 14–107 mW across 4 nodes over 30 minutes.</canvas>
+    </div>
+  </div>
+
+  <!-- Radio + Power dist -->
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title"><span class="chart-title-text">Radio events per minute (all nodes)</span></div>
+      <div style="position:relative; height:200px;">
+        <canvas id="radioChart" role="img" aria-label="Bar chart of radio events per minute">60 events per minute consistently across all nodes.</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title"><span class="chart-title-text">Power distribution by node (mW avg)</span></div>
+      <div style="position:relative; height:200px;">
+        <canvas id="barChart" role="img" aria-label="Bar chart of average power per node">m3_13 highest at 103 mW, m3_15 lowest at 76 mW.</canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Node panel -->
+  <div class="section-label">Node communication behavior</div>
+  <div class="node-panel">
+    <div style="font-size:13px; color:var(--text-muted); margin-bottom:4px;">Click a node to inspect details</div>
+    <div class="node-grid" id="nodeGrid"></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div>Active (power data)</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--text-dim)"></div>No consumption data</div>
+    </div>
+    <div class="node-detail" id="nodeDetail">
+      <div id="nodeDetailContent"></div>
+    </div>
+  </div>
+
+  <!-- Node summary table -->
+  <div class="section-label">Node summary</div>
+  <div class="chart-card wide">
+    <table class="radio-table">
+      <thead>
+        <tr>
+          <th>Node</th>
+          <th>Avg power</th>
+          <th>Min power</th>
+          <th>Max power</th>
+          <th>Power samples</th>
+          <th>Radio events</th>
+          <th>Channel</th>
+          <th>RSSI</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="summaryTable"></tbody>
+    </table>
+  </div>
+
+  <footer>
+    <div>FIT IoT-LAB · Experiment 435603 · alshami-435603</div>
+    <div>Generated from .oml files · consumption + radio data</div>
+  </footer>
+
+</div>
+
+<script>
+// ── Real data from OML files ──────────────────────────────────────────────
+const LABELS = Array.from({length:31}, (_,i) => i+'min');
+
+const POWER = {
+  'm3_13': [50.29,46.4,105.39,106.85,107.03,106.99,107.0,107.05,106.98,107.04,107.0,107.08,106.99,107.03,107.0,107.0,107.0,106.95,107.02,107.06,107.04,106.95,106.98,107.03,107.02,106.97,107.05,107.03,107.05,107.08,106.9],
+  'm3_14': [49.9,49.47,95.62,106.12,106.25,106.27,106.35,106.41,105.98,105.4,105.4,105.46,105.37,105.4,91.65,20.18,95.34,95.0,95.04,95.09,95.06,94.7,38.21,95.35,95.03,95.03,95.05,95.04,95.08,95.1,94.96],
+  'm3_15': [47.76,47.26,90.95,21.83,79.87,90.21,90.13,90.23,14.48,90.97,90.22,90.24,83.12,40.0,90.59,90.17,90.19,52.63,73.82,31.61,64.9,90.32,90.17,90.25,90.27,90.29,90.34,90.33,90.33,90.36,90.31],
+  'm3_21': [49.93,49.38,94.28,104.57,104.74,104.74,104.77,104.83,104.77,104.81,104.81,104.87,104.78,104.81,104.78,104.83,104.8,104.76,104.82,104.85,104.85,104.76,104.8,102.41,53.69,93.5,93.41,93.42,93.45,93.46,17.02]
+};
+
+const RADIO = {
+  'm3_13': [54,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,11],
+  'm3_14': [54,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,11],
+  'm3_15': [54,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,11],
+  'm3_18': [51,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,13],
+  'm3_21': [54,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,60,11]
+};
+
+const STATS = {
+  'm3_13': {avg:103.17, min:46.4,  max:107.08, samples:27302, radio:1805, hasConsumption:true},
+  'm3_14': {avg:91.62,  min:20.18, max:106.41, samples:27364, radio:1805, hasConsumption:true},
+  'm3_15': {avg:76.26,  min:14.48, max:90.97,  samples:27517, radio:1805, hasConsumption:true},
+  'm3_18': {avg:null,   min:null,  max:null,   samples:0,     radio:1804, hasConsumption:false},
+  'm3_21': {avg:94.51,  min:17.02, max:104.87, samples:27649, radio:1805, hasConsumption:true}
+};
+
+const NODE_COLORS = {
+  'm3_13': '#63b3ed',
+  'm3_14': '#68d391',
+  'm3_15': '#f6ad55',
+  'm3_21': '#b794f4'
+};
+
+// ── Power line chart ──────────────────────────────────────────────────────
+const activeNodes = new Set(['m3_13','m3_14','m3_15','m3_21']);
+
+const powerCtx = document.getElementById('powerChart').getContext('2d');
+const powerChart = new Chart(powerCtx, {
+  type: 'line',
+  data: {
+    labels: LABELS,
+    datasets: Object.keys(POWER).map(node => ({
+      label: node,
+      data: POWER[node],
+      borderColor: NODE_COLORS[node],
+      backgroundColor: NODE_COLORS[node]+'18',
+      borderWidth: 1.5,
+      fill: false,
+      tension: 0.3,
+      pointRadius: 0,
+      pointHoverRadius: 4
+    }))
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#1a2236',
+        borderColor: 'rgba(99,179,237,0.3)',
+        borderWidth: 1,
+        titleColor: '#718096',
+        bodyColor: '#e2e8f0',
+        titleFont: { family: 'IBM Plex Mono', size: 10 },
+        bodyFont: { family: 'IBM Plex Mono', size: 11 },
+        callbacks: {
+          label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y.toFixed(1)} mW`
+        }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { color: '#4a5568', font: { family:'IBM Plex Mono', size:9 }, maxTicksLimit:10 },
+        grid: { color: 'rgba(99,179,237,0.05)' }
+      },
+      y: {
+        min: 0, max: 120,
+        ticks: { color: '#4a5568', font: { family:'IBM Plex Mono', size:9 }, callback: v => v+' mW' },
+        grid: { color: 'rgba(99,179,237,0.05)' }
+      }
+    }
+  }
+});
+
+function toggleNode(btn, node) {
+  btn.classList.toggle('active');
+  const ds = powerChart.data.datasets.find(d => d.label === node);
+  if (ds) {
+    ds.hidden = !btn.classList.contains('active');
+    powerChart.update();
+  }
+}
+
+// ── Radio bar chart ───────────────────────────────────────────────────────
+// Average radio events per bucket across all nodes
+const radioAvg = LABELS.map((_, i) => {
+  const vals = Object.values(RADIO).map(s => s[i]);
+  return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+});
+
+new Chart(document.getElementById('radioChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: LABELS,
+    datasets: [{
+      label: 'Radio events',
+      data: radioAvg,
+      backgroundColor: 'rgba(104,211,145,0.25)',
+      borderColor: '#68d391',
+      borderWidth: 1,
+      borderRadius: 2
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display:false },
+      tooltip: {
+        backgroundColor:'#1a2236', borderColor:'rgba(104,211,145,0.3)', borderWidth:1,
+        titleColor:'#718096', bodyColor:'#e2e8f0',
+        titleFont:{family:'IBM Plex Mono',size:10}, bodyFont:{family:'IBM Plex Mono',size:11}
+      }
+    },
+    scales: {
+      x: { ticks:{color:'#4a5568',font:{family:'IBM Plex Mono',size:9},maxTicksLimit:8}, grid:{color:'rgba(99,179,237,0.05)'} },
+      y: { min:0, max:70, ticks:{color:'#4a5568',font:{family:'IBM Plex Mono',size:9}}, grid:{color:'rgba(99,179,237,0.05)'} }
+    }
+  }
+});
+
+// ── Per-node avg bar chart ────────────────────────────────────────────────
+const barNodes = ['m3_13','m3_14','m3_15','m3_21'];
+new Chart(document.getElementById('barChart').getContext('2d'), {
+  type: 'bar',
+  data: {
+    labels: barNodes,
+    datasets: [{
+      label: 'Avg power (mW)',
+      data: barNodes.map(n => STATS[n].avg),
+      backgroundColor: barNodes.map(n => NODE_COLORS[n]+'44'),
+      borderColor: barNodes.map(n => NODE_COLORS[n]),
+      borderWidth: 1.5,
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend:{display:false},
+      tooltip:{
+        backgroundColor:'#1a2236', borderColor:'rgba(99,179,237,0.3)', borderWidth:1,
+        titleColor:'#718096', bodyColor:'#e2e8f0',
+        titleFont:{family:'IBM Plex Mono',size:10}, bodyFont:{family:'IBM Plex Mono',size:11},
+        callbacks:{ label: ctx => ` ${ctx.parsed.y.toFixed(2)} mW` }
+      }
+    },
+    scales: {
+      x: { ticks:{color:'#4a5568',font:{family:'IBM Plex Mono',size:10}}, grid:{display:false} },
+      y: { min:0, ticks:{color:'#4a5568',font:{family:'IBM Plex Mono',size:9},callback:v=>v+' mW'}, grid:{color:'rgba(99,179,237,0.05)'} }
+    }
+  }
+});
+
+// ── Node grid ─────────────────────────────────────────────────────────────
+const ALL_NODES = ['m3_13','m3_14','m3_15','m3_18','m3_21'];
+const nodeGrid = document.getElementById('nodeGrid');
+
+ALL_NODES.forEach(node => {
+  const s = STATS[node];
+  const hasData = s.hasConsumption;
+  const color = hasData ? NODE_COLORS[node] || '#63b3ed' : '#4a5568';
+  const div = document.createElement('div');
+  div.className = 'node-item';
+  div.innerHTML = `
+    <div class="node-circle ${hasData?'active':'no-data'}"
+         style="${hasData?`border-color:${color};color:${color};background:${color}18`:''}"
+         onclick="showNodeDetail('${node}')">
+      ${node.replace('m3_','')}
+    </div>
+    <div class="node-name">${node}</div>
+    <div class="node-avg" style="color:${color}">${hasData ? s.avg.toFixed(1)+' mW' : 'no data'}</div>
+  `;
+  nodeGrid.appendChild(div);
+});
+
+function showNodeDetail(node) {
+  const s = STATS[node];
+  const det = document.getElementById('nodeDetail');
+  const content = document.getElementById('nodeDetailContent');
+  det.classList.add('visible');
+  const color = NODE_COLORS[node] || '#718096';
+
+  const powerVals = POWER[node] ? POWER[node].filter(v=>v!==null) : [];
+  const radioTotal = RADIO[node] ? RADIO[node].reduce((a,b)=>a+b,0) : s.radio;
+
+  content.innerHTML = `
+    <div style="font-family:var(--mono);font-size:11px;color:var(--text-muted);margin-bottom:10px;">
+      <span style="color:${color};font-weight:500;">${node}</span>
+      &nbsp;·&nbsp; Channel 11 &nbsp;·&nbsp; RSSI −91 dBm &nbsp;·&nbsp; IEEE 802.15.4
+    </div>
+    <div class="node-detail-grid">
+      <div class="detail-item">
+        <div class="detail-label">Avg power</div>
+        <div class="detail-value" style="color:${color}">${s.hasConsumption ? s.avg.toFixed(2)+' mW' : 'N/A'}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Min power</div>
+        <div class="detail-value" style="color:${color}">${s.hasConsumption ? s.min.toFixed(2)+' mW' : 'N/A'}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Max power</div>
+        <div class="detail-value" style="color:${color}">${s.hasConsumption ? s.max.toFixed(2)+' mW' : 'N/A'}</div>
+      </div>
+      <div class="detail-item">
+        <div class="detail-label">Radio events</div>
+        <div class="detail-value" style="color:#68d391">${radioTotal}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Summary table ─────────────────────────────────────────────────────────
+const tbody = document.getElementById('summaryTable');
+ALL_NODES.forEach(node => {
+  const s = STATS[node];
+  const color = NODE_COLORS[node] || '#718096';
+  const pct = s.hasConsumption ? ((s.avg/107.08)*100).toFixed(0) : 0;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td style="color:${color};font-weight:500;">${node}</td>
+    <td>
+      <div class="power-bar-wrap">
+        <div class="power-bar"><div class="power-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        <span style="color:var(--text)">${s.hasConsumption ? s.avg.toFixed(2)+' mW' : '—'}</span>
+      </div>
+    </td>
+    <td>${s.hasConsumption ? s.min.toFixed(2)+' mW' : '—'}</td>
+    <td>${s.hasConsumption ? s.max.toFixed(2)+' mW' : '—'}</td>
+    <td>${s.samples > 0 ? s.samples.toLocaleString() : '—'}</td>
+    <td>${s.radio.toLocaleString()}</td>
+    <td><span class="badge badge-blue">CH 11</span></td>
+    <td style="color:var(--accent3)">−91 dBm</td>
+    <td><span class="badge ${s.hasConsumption?'badge-green':''}">
+      ${s.hasConsumption ? 'active' : 'no data'}
+    </span></td>
+  `;
+  tbody.appendChild(tr);
+});
+</script>
+</body>
+</html>

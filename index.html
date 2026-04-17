@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIT IoT-LAB Visualizer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600&family=Syne:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #07090f;
+  --surface:  #0d1117;
+  --s2:       #131b27;
+  --s3:       #1a2535;
+  --border:   rgba(56,189,248,0.12);
+  --border2:  rgba(56,189,248,0.25);
+  --accent:   #38bdf8;
+  --a2:       #34d399;
+  --a3:       #fbbf24;
+  --a4:       #f87171;
+  --a5:       #a78bfa;
+  --text:     #e2e8f0;
+  --muted:    #64748b;
+  --dim:      #334155;
+  --mono:     'JetBrains Mono', monospace;
+  --display:  'Syne', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-weight: 300;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scanline overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* Dot grid */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(56,189,248,0.06) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Layout ── */
+.page { position: relative; z-index: 1; }
+
+/* ── Hero / Upload ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.hero-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: '';
+  width: 32px; height: 1px;
+  background: var(--accent);
+  opacity: .4;
+}
+
+h1 {
+  font-family: var(--display);
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: -.03em;
+  color: #fff;
+  margin-bottom: .5rem;
+}
+
+h1 em {
+  font-style: normal;
+  color: var(--accent);
+}
+
+.hero-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 3rem;
+  max-width: 480px;
+  line-height: 1.8;
+}
+
+/* Drop zone */
+.drop-zone {
+  width: 100%;
+  max-width: 580px;
+  border: 1.5px dashed var(--border2);
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  cursor: pointer;
+  transition: all .25s;
+  background: var(--surface);
+  position: relative;
+  overflow: hidden;
+}
+
+.drop-zone::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(56,189,248,0.06) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.drop-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(56,189,248,0.05);
+  transform: scale(1.01);
+}
+
+.drop-icon {
+  width: 56px; height: 56px;
+  margin: 0 auto 1.25rem;
+  border: 1.5px solid var(--border2);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--s2);
+}
+
+.drop-icon svg { width: 24px; height: 24px; stroke: var(--accent); fill: none; stroke-width: 1.5; }
+
+.drop-title {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.drop-hint {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.drop-hint strong { color: var(--accent); font-weight: 500; }
+
+.file-types {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.file-tag {
+  font-size: 10px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--border2);
+  color: var(--accent);
+  letter-spacing: .06em;
+}
+
+#fileInput { display: none; }
+
+.upload-btn {
+  margin-top: 1.5rem;
+  padding: 10px 24px;
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 12px;
+  cursor: pointer;
+  letter-spacing: .06em;
+  transition: all .2s;
+}
+
+.upload-btn:hover { background: rgba(56,189,248,0.08); border-color: var(--accent); color: var(--accent); }
+
+/* ── Processing state ── */
+.processing {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 1.5rem;
+}
+
+.processing.show { display: flex; }
+
+.spinner {
+  width: 32px; height: 32px;
+  border: 2px solid var(--dim);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.proc-label { font-size: 11px; color: var(--muted); letter-spacing: .08em; }
+
+/* ── Dashboard ── */
+#dashboard { display: none; padding: 0 0 4rem; }
+#dashboard.show { display: block; }
+
+.dash-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1.25rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+
+.dash-brand {
+  font-family: var(--display);
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dash-brand span { color: var(--accent); }
+
+.dash-meta {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.8;
+  text-align: right;
+}
+
+.dash-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid var(--border2);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  letter-spacing: .04em;
+  transition: all .2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:hover { background: rgba(56,189,248,0.08); border-color: var(--accent); color: var(--accent); }
+.btn-accent { background: rgba(56,189,248,0.1); border-color: var(--accent); color: var(--accent); }
+.btn-accent:hover { background: rgba(56,189,248,0.2); }
+
+.btn svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+/* ── Inner layout ── */
+.inner { max-width: 1320px; margin: 0 auto; padding: 0 2rem; }
+
+/* ── Section ── */
+.section { margin-top: 2rem; }
+
+.sec-label {
+  font-size: 9px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sec-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ── KPI ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap: 10px;
+}
+
+.kpi {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 18px 20px;
+  position: relative;
+  overflow: hidden;
+  animation: fadeUp .4s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.kpi::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1.5px;
+  background: var(--kc, var(--accent));
+}
+
+.kpi-lbl {
+  font-size: 9px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+
+.kpi-val {
+  font-family: var(--display);
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1;
+}
+
+.kpi-unit { font-family: var(--mono); font-size: 13px; font-weight: 300; color: var(--muted); }
+
+.kpi-sub {
+  font-size: 9px;
+  color: var(--dim);
+  margin-top: 8px;
+  line-height: 1.7;
+}
+
+/* ── Chart cards ── */
+.chart-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.chart-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  animation: fadeUp .5s ease both;
+}
+
+.card.span2 { grid-column: span 2; }
+.card.span3 { grid-column: span 3; }
+
+.card-title {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.card-sub {
+  font-size: 10px;
+  color: var(--muted);
+  margin-bottom: 16px;
+  line-height: 1.6;
+}
+
+/* Chart legends */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: color .15s;
+}
+
+.legend-item:hover { color: var(--text); }
+.legend-item.off { opacity: .35; }
+
+.legend-swatch {
+  width: 12px; height: 3px;
+  border-radius: 2px;
+}
+
+/* ── Node behavior panel ── */
+.node-map {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.node-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--s2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all .2s;
+  min-width: 160px;
+}
+
+.node-pill:hover { border-color: var(--border2); background: var(--s3); }
+.node-pill.selected { border-color: var(--accent); background: rgba(56,189,248,0.06); }
+
+.node-dot-wrap {
+  position: relative;
+  width: 36px; height: 36px;
+}
+
+.node-dot {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.node-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1px solid;
+  opacity: 0;
+  animation: ring 2s ease-out infinite;
+}
+
+@keyframes ring {
+  0%  { opacity: .5; transform: scale(.9); }
+  100%{ opacity: 0;  transform: scale(1.3); }
+}
+
+.node-info { flex: 1; }
+.node-name-lbl { font-size: 11px; font-weight: 600; color: var(--text); }
+.node-type-lbl { font-size: 9px; color: var(--muted); margin-top: 1px; }
+.node-stat     { font-size: 10px; margin-top: 4px; }
+
+/* Node detail popup */
+.node-detail {
+  display: none;
+  margin-top: 14px;
+  padding: 16px;
+  background: var(--s2);
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  animation: fadeUp .2s ease;
+}
+
+.node-detail.show { display: block; }
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.detail-kpi { }
+.dk-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 4px; }
+.dk-val { font-size: 15px; font-weight: 600; color: var(--accent); }
+
+/* ── Log viewer ── */
+.log-box {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  max-height: 220px;
+  overflow-y: auto;
+  font-size: 10px;
+  line-height: 1.9;
+  color: var(--muted);
+}
+
+.log-box::-webkit-scrollbar { width: 4px; }
+.log-box::-webkit-scrollbar-track { background: transparent; }
+.log-box::-webkit-scrollbar-thumb { background: var(--dim); border-radius: 2px; }
+
+.log-line { display: flex; gap: 8px; }
+.log-ts  { color: var(--dim); flex-shrink: 0; }
+.log-lvl { flex-shrink: 0; width: 36px; }
+.log-lvl.info  { color: var(--a2); }
+.log-lvl.error { color: var(--a4); }
+.log-msg { color: var(--muted); }
+
+/* ── Timeline events ── */
+.timeline { margin-top: 8px; }
+.tl-item {
+  display: flex;
+  gap: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 11px;
+  align-items: flex-start;
+}
+
+.tl-item:last-child { border-bottom: none; }
+.tl-time { color: var(--muted); flex-shrink: 0; width: 80px; }
+.tl-dot  { width: 6px; height: 6px; border-radius: 50%; margin-top: 4px; flex-shrink: 0; }
+.tl-text { color: var(--text); line-height: 1.5; }
+
+/* ── Radio heatmap ── */
+.heatmap-wrap { margin-top: 8px; overflow-x: auto; }
+.heatmap {
+  display: grid;
+  gap: 2px;
+}
+.hm-cell {
+  height: 14px;
+  border-radius: 2px;
+  transition: opacity .15s;
+}
+.hm-cell:hover { opacity: .7; }
+.hm-labels {
+  display: grid;
+  gap: 2px;
+  margin-top: 4px;
+}
+.hm-label { font-size: 8px; color: var(--dim); text-align: center; }
+
+/* ── Export bar ── */
+.export-bar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Tabs ── */
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+
+.tab {
+  padding: 8px 16px;
+  font-size: 11px;
+  cursor: pointer;
+  color: var(--muted);
+  border-bottom: 2px solid transparent;
+  transition: all .15s;
+  letter-spacing: .04em;
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  font-family: var(--mono);
+}
+
+.tab:hover { color: var(--text); }
+.tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+
+/* ── Empty / error states ── */
+.empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 9px;
+  letter-spacing: .06em;
+  font-weight: 500;
+}
+
+.tag-blue  { background: rgba(56,189,248,0.12);  color: var(--accent); }
+.tag-green { background: rgba(52,211,153,0.12);  color: var(--a2); }
+.tag-amber { background: rgba(251,191,36,0.12);  color: var(--a3); }
+.tag-red   { background: rgba(248,113,113,0.12); color: var(--a4); }
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  .kpi-grid { grid-template-columns: 1fr 1fr; }
+  .chart-grid-2 { grid-template-columns: 1fr; }
+  .chart-grid-3 { grid-template-columns: 1fr; }
+  .card.span2, .card.span3 { grid-column: span 1; }
+  .detail-grid { grid-template-columns: repeat(2,1fr); }
+  .dash-header { flex-direction: column; align-items: flex-start; }
+  .dash-meta { text-align: left; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ══════════════════════ UPLOAD HERO ══════════════════════ -->
+<div id="hero" class="hero">
+  <div class="hero-eyebrow">IoT Research Tools</div>
+  <h1>FIT IoT-LAB<br><em>Visualizer</em></h1>
+  <p class="hero-sub">
+    Drop your experiment files — .oml, .log, or a .zip archive — and get instant interactive charts for power, radio, latency, and node behavior.
+  </p>
+
+  <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+    <div class="drop-icon">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+    </div>
+    <div class="drop-title">Drop files here</div>
+    <div class="drop-hint">
+      Drag &amp; drop your experiment folder, ZIP archive,<br>
+      or individual <strong>.oml</strong> / <strong>.log</strong> files
+    </div>
+    <div class="file-types">
+      <span class="file-tag">.zip</span>
+      <span class="file-tag">consumption/*.oml</span>
+      <span class="file-tag">radio/*.oml</span>
+      <span class="file-tag">log/*.log</span>
+    </div>
+    <button class="upload-btn" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
+      Browse files
+    </button>
+  </div>
+
+  <div class="processing" id="processing">
+    <div class="spinner"></div>
+    <div class="proc-label" id="procLabel">Parsing files…</div>
+  </div>
+
+  <input type="file" id="fileInput" multiple accept=".oml,.log,.zip">
+</div>
+
+<!-- ══════════════════════ DASHBOARD ══════════════════════ -->
+<div id="dashboard">
+
+  <!-- Sticky header -->
+  <div class="dash-header">
+    <div class="dash-brand">FIT IoT-LAB <span>Visualizer</span></div>
+    <div class="dash-meta" id="dashMeta"></div>
+    <div class="dash-actions">
+      <button class="btn" onclick="exportAllPNG()">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export PNG
+      </button>
+      <button class="btn btn-accent" onclick="resetApp()">
+        <svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+        New upload
+      </button>
+    </div>
+  </div>
+
+  <div class="inner">
+
+    <!-- KPIs -->
+    <div class="section">
+      <div class="sec-label">Overview</div>
+      <div class="kpi-grid" id="kpiGrid"></div>
+    </div>
+
+    <!-- Tabs: Power / Radio / Nodes / Logs -->
+    <div class="section">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('power',this)">Power consumption</button>
+        <button class="tab" onclick="switchTab('radio',this)">Radio &amp; RSSI</button>
+        <button class="tab" onclick="switchTab('nodes',this)">Node behavior</button>
+        <button class="tab" onclick="switchTab('logs',this)">Event log</button>
+      </div>
+
+      <!-- Power tab -->
+      <div class="tab-panel active" id="tab-power">
+        <div class="chart-grid-2">
+          <div class="card span2">
+            <div class="card-title">Per-node power consumption over time</div>
+            <div class="card-sub">Averaged in 60-second buckets · mW · click legend to toggle nodes</div>
+            <div class="legend" id="powerLegend"></div>
+            <div style="position:relative;height:260px;">
+              <canvas id="powerChart" role="img" aria-label="Line chart: power consumption per node over time"></canvas>
+            </div>
+            <div class="export-bar">
+              <button class="btn" onclick="exportChart('powerChart','power_consumption')">Export PNG</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Average power per node</div>
+            <div class="card-sub">Mean mW across full experiment</div>
+            <div style="position:relative;height:220px;">
+              <canvas id="avgBarChart" role="img" aria-label="Bar chart: average power per node"></canvas>
+            </div>
+            <div class="export-bar">
+              <button class="btn" onclick="exportChart('avgBarChart','avg_power_per_node')">Export PNG</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Power distribution</div>
+            <div class="card-sub">Histogram of all power readings (mW buckets)</div>
+            <div style="position:relative;height:220px;">
+              <canvas id="powerHistChart" role="img" aria-label="Bar chart: power distribution histogram"></canvas>
+            </div>
+            <div class="export-bar">
+              <button class="btn" onclick="exportChart('powerHistChart','power_distribution')">Export PNG</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Radio tab -->
+      <div class="tab-panel" id="tab-radio">
+        <div class="chart-grid-2">
+          <div class="card span2">
+            <div class="card-title">Radio events per minute</div>
+            <div class="card-sub">Number of radio activity measurements captured per 60-second bucket · all nodes</div>
+            <div class="legend" id="radioLegend"></div>
+            <div style="position:relative;height:240px;">
+              <canvas id="radioChart" role="img" aria-label="Line chart: radio events per node per minute"></canvas>
+            </div>
+            <div class="export-bar">
+              <button class="btn" onclick="exportChart('radioChart','radio_events')">Export PNG</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">RSSI per node</div>
+            <div class="card-sub">Average received signal strength (dBm)</div>
+            <div style="position:relative;height:220px;">
+              <canvas id="rssiChart" role="img" aria-label="Bar chart: RSSI per node"></canvas>
+            </div>
+            <div class="export-bar">
+              <button class="btn" onclick="exportChart('rssiChart','rssi_per_node')">Export PNG</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Radio activity heatmap</div>
+            <div class="card-sub">Event density across time × node</div>
+            <div id="heatmapContainer" style="margin-top:8px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nodes tab -->
+      <div class="tab-panel" id="tab-nodes">
+        <div class="card span3" style="margin-bottom:12px;">
+          <div class="card-title">Node communication map</div>
+          <div class="card-sub">Click a node to inspect its detailed metrics</div>
+          <div class="node-map" id="nodeMap"></div>
+          <div class="node-detail" id="nodeDetail">
+            <div id="nodeDetailInner"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Node summary table</div>
+          <div class="card-sub">All parsed nodes · full experiment</div>
+          <div style="overflow-x:auto; margin-top:4px;">
+            <table style="width:100%;border-collapse:collapse;font-size:11px;" id="nodeTable"></table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Logs tab -->
+      <div class="tab-panel" id="tab-logs">
+        <div class="chart-grid-2">
+          <div class="card span2">
+            <div class="card-title">Experiment timeline</div>
+            <div class="card-sub">Key events extracted from gateway logs</div>
+            <div class="timeline" id="timeline"></div>
+          </div>
+          <div class="card span2">
+            <div class="card-title">Raw log viewer</div>
+            <div class="card-sub">All log entries · scroll to browse</div>
+            <div class="log-box" id="logBox"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /inner -->
+</div><!-- /dashboard -->
+
+</div><!-- /page -->
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  State
+// ══════════════════════════════════════════════════════════════
+const STATE = {
+  nodes: {},        // { nodeId: { power:[], radio:[], rssi:[], stats:{} } }
+  logLines: [],
+  meta: {},
+  labels: [],
+  charts: {}
+};
+
+const NODE_PALETTE = ['#38bdf8','#34d399','#fbbf24','#f87171','#a78bfa','#fb923c','#e879f9','#4ade80'];
+
+// ══════════════════════════════════════════════════════════════
+//  Drag & Drop / File handling
+// ══════════════════════════════════════════════════════════════
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('fileInput');
+
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('drag-over');
+  handleFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+async function handleFiles(fileList) {
+  const files = Array.from(fileList);
+  if (!files.length) return;
+  showProcessing('Reading files…');
+
+  const allFiles = [];  // { name, path, text }
+
+  for (const file of files) {
+    if (file.name.endsWith('.zip')) {
+      showProcessing('Extracting ZIP…');
+      const zip = await JSZip.loadAsync(await file.arrayBuffer());
+      for (const [path, entry] of Object.entries(zip.files)) {
+        if (entry.dir) continue;
+        const name = path.split('/').pop();
+        if (!name.endsWith('.oml') && !name.endsWith('.log')) continue;
+        const text = await entry.async('text');
+        allFiles.push({ name, path, text });
+      }
+    } else {
+      const text = await file.text();
+      allFiles.push({ name: file.name, path: file.name, text });
+    }
+  }
+
+  showProcessing('Parsing OML data…');
+  await sleep(30);
+  parseAllFiles(allFiles);
+  showProcessing('Building charts…');
+  await sleep(30);
+  buildDashboard();
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+function showProcessing(msg) {
+  document.getElementById('processing').classList.add('show');
+  document.getElementById('procLabel').textContent = msg;
+}
+
+function hideProcessing() {
+  document.getElementById('processing').classList.remove('show');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  Parsers
+// ══════════════════════════════════════════════════════════════
+function parseAllFiles(files) {
+  STATE.nodes = {};
+  STATE.logLines = [];
+  STATE.meta = { expId: null, date: null, nodes: [] };
+
+  for (const f of files) {
+    if (f.name.endsWith('.oml')) {
+      parseOML(f);
+    } else if (f.name.endsWith('.log')) {
+      parseLog(f);
+    }
+  }
+
+  // Determine experiment duration from data
+  let maxT = 0;
+  for (const nd of Object.values(STATE.nodes)) {
+    if (nd.powerBuckets) {
+      const keys = Object.keys(nd.powerBuckets).map(Number);
+      if (keys.length) maxT = Math.max(maxT, ...keys);
+    }
+  }
+  if (maxT === 0) maxT = 30;
+  STATE.maxBucket = maxT;
+  STATE.labels = Array.from({length: maxT + 1}, (_, i) => i + 'min');
+
+  // Build final series
+  for (const [id, nd] of Object.entries(STATE.nodes)) {
+    const pb = nd.powerBuckets || {};
+    const rb = nd.radioBuckets || {};
+    const rssiB = nd.rssiBuckets || {};
+
+    nd.powerSeries = STATE.labels.map((_, i) => {
+      const vals = pb[i];
+      return vals && vals.length ? +(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(2) : null;
+    });
+
+    nd.radioSeries = STATE.labels.map((_, i) => rb[i] || 0);
+
+    nd.rssiSeries = STATE.labels.map((_, i) => {
+      const vals = rssiB[i];
+      return vals && vals.length ? +(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1) : null;
+    });
+
+    const allPow = Object.values(pb).flat();
+    nd.stats = {
+      hasConsumption: allPow.length > 0,
+      avgPow: allPow.length ? +(allPow.reduce((a,b)=>a+b,0)/allPow.length).toFixed(2) : null,
+      minPow: allPow.length ? +Math.min(...allPow).toFixed(2) : null,
+      maxPow: allPow.length ? +Math.max(...allPow).toFixed(2) : null,
+      samples: allPow.length,
+      radioTotal: Object.values(rb).reduce((a,b)=>a+b,0),
+      avgRSSI: nd.rssiAll && nd.rssiAll.length
+        ? +(nd.rssiAll.reduce((a,b)=>a+b,0)/nd.rssiAll.length).toFixed(1)
+        : null,
+      channel: nd.channel || null
+    };
+  }
+}
+
+function parseOML(f) {
+  const lines = f.text.split('\n');
+  let schema = null;
+  let nodeId = null;
+  let expId = null;
+  let fileType = null; // 'consumption' or 'radio'
+
+  // Detect from path
+  if (f.path.includes('consumption')) fileType = 'consumption';
+  else if (f.path.includes('radio')) fileType = 'radio';
+
+  // Detect node id from filename (e.g. m3_13.oml)
+  const nm = f.name.replace('.oml','');
+  nodeId = nm; // e.g. m3_13
+
+  if (!STATE.nodes[nodeId]) STATE.nodes[nodeId] = {
+    powerBuckets: {}, radioBuckets: {}, rssiBuckets: {}, rssiAll: [], channel: null
+  };
+
+  const nd = STATE.nodes[nodeId];
+
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) continue;
+
+    if (line.startsWith('domain:')) {
+      expId = line.split(':')[1].trim();
+      if (!STATE.meta.expId) STATE.meta.expId = expId;
+      continue;
+    }
+
+    if (line.startsWith('sender-id:')) {
+      // override nodeId from header
+      const sid = line.split(':')[1].trim();
+      if (sid && sid !== nodeId) {
+        // rename
+        if (STATE.nodes[nodeId] && nodeId !== sid) {
+          STATE.nodes[sid] = STATE.nodes[nodeId];
+          delete STATE.nodes[nodeId];
+          nodeId = sid;
+        }
+      }
+      continue;
+    }
+
+    if (line.startsWith('schema:')) {
+      if (line.includes('consumption')) { schema = 'consumption'; fileType = 'consumption'; }
+      else if (line.includes('radio'))  { schema = 'radio';       fileType = 'radio'; }
+      continue;
+    }
+
+    if (line.startsWith('protocol:') || line.startsWith('start-time:') ||
+        line.startsWith('app-name:')  || line.startsWith('content:')) continue;
+
+    // Data row
+    const parts = line.split('\t');
+    if (parts.length < 5) continue;
+
+    const t = parseFloat(parts[0]);
+    if (isNaN(t)) continue;
+    const bucket = Math.floor(t / 60);
+
+    if (fileType === 'consumption' && parts.length >= 6) {
+      const pow = parseFloat(parts[5]);
+      if (!isNaN(pow) && pow === pow) { // not nan
+        const mw = pow * 1000;
+        if (!nd.powerBuckets[bucket]) nd.powerBuckets[bucket] = [];
+        nd.powerBuckets[bucket].push(mw);
+      }
+    } else if (fileType === 'radio' && parts.length >= 7) {
+      const ch   = parseInt(parts[5]);
+      const rssi = parseInt(parts[6]);
+      if (!nd.radioBuckets[bucket]) nd.radioBuckets[bucket] = 0;
+      nd.radioBuckets[bucket]++;
+      if (!isNaN(rssi)) {
+        if (!nd.rssiBuckets[bucket]) nd.rssiBuckets[bucket] = [];
+        nd.rssiBuckets[bucket].push(rssi);
+        nd.rssiAll.push(rssi);
+      }
+      if (!isNaN(ch) && ch > 0) nd.channel = ch;
+    }
+  }
+}
+
+function parseLog(f) {
+  const lines = f.text.split('\n');
+  for (const raw of lines) {
+    const line = raw.trim();
+    if (!line) continue;
+
+    // Format: 2026-04-08 22:49:08,334 :: INFO :: message
+    const m = line.match(/^(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}),\d+ :: (INFO|ERROR|WARNING|DEBUG) :: (.+)$/);
+    if (m) {
+      STATE.logLines.push({ ts: m[1], level: m[2].toLowerCase(), msg: m[3] });
+      if (!STATE.meta.date) STATE.meta.date = m[1].split(' ')[0];
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+//  Dashboard builder
+// ══════════════════════════════════════════════════════════════
+function buildDashboard() {
+  const nodeIds = Object.keys(STATE.nodes).sort();
+  if (!nodeIds.length && !STATE.logLines.length) {
+    alert('No recognizable FIT IoT-LAB data found in the uploaded files.');
+    hideProcessing();
+    return;
+  }
+
+  STATE.meta.nodes = nodeIds;
+
+  // Assign colors
+  nodeIds.forEach((id, i) => { STATE.nodes[id].color = NODE_PALETTE[i % NODE_PALETTE.length]; });
+
+  buildKPIs(nodeIds);
+  buildPowerCharts(nodeIds);
+  buildRadioCharts(nodeIds);
+  buildNodePanel(nodeIds);
+  buildLogs();
+  buildMeta();
+
+  hideProcessing();
+  document.getElementById('hero').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+}
+
+// ── KPIs ──────────────────────────────────────────────────────
+function buildKPIs(nodeIds) {
+  const withPower = nodeIds.filter(id => STATE.nodes[id].stats.hasConsumption);
+  const allAvg = withPower.map(id => STATE.nodes[id].stats.avgPow).filter(Boolean);
+  const overallAvg = allAvg.length ? (allAvg.reduce((a,b)=>a+b,0)/allAvg.length).toFixed(1) : '—';
+
+  const allRSSI = nodeIds.map(id => STATE.nodes[id].stats.avgRSSI).filter(Boolean);
+  const overallRSSI = allRSSI.length ? (allRSSI.reduce((a,b)=>a+b,0)/allRSSI.length).toFixed(0) : '—';
+
+  const totalEvents = nodeIds.reduce((s,id) => s + (STATE.nodes[id].stats.radioTotal||0), 0);
+  const dur = STATE.maxBucket + 1;
+
+  document.getElementById('kpiGrid').innerHTML = `
+    <div class="kpi" style="--kc:var(--accent)">
+      <div class="kpi-lbl">Avg power (active nodes)</div>
+      <div class="kpi-val">${overallAvg}<span class="kpi-unit"> mW</span></div>
+      <div class="kpi-sub">${withPower.length} of ${nodeIds.length} nodes with consumption data</div>
+    </div>
+    <div class="kpi" style="--kc:var(--a2)">
+      <div class="kpi-lbl">Total radio events</div>
+      <div class="kpi-val">${totalEvents.toLocaleString()}<span class="kpi-unit"></span></div>
+      <div class="kpi-sub">${nodeIds.length} nodes · channel ${STATE.nodes[nodeIds[0]]?.channel || '—'}</div>
+    </div>
+    <div class="kpi" style="--kc:var(--a3)">
+      <div class="kpi-lbl">Active nodes</div>
+      <div class="kpi-val">${nodeIds.length}<span class="kpi-unit"> nodes</span></div>
+      <div class="kpi-sub">Experiment: ${STATE.meta.expId || '—'}</div>
+    </div>
+    <div class="kpi" style="--kc:var(--a5)">
+      <div class="kpi-lbl">Duration</div>
+      <div class="kpi-val">${dur}<span class="kpi-unit"> min</span></div>
+      <div class="kpi-sub">Avg RSSI: ${overallRSSI} dBm · ${STATE.meta.date || ''}</div>
+    </div>
+  `;
+}
+
+// ── Power charts ──────────────────────────────────────────────
+function buildPowerCharts(nodeIds) {
+  const withPow = nodeIds.filter(id => STATE.nodes[id].stats.hasConsumption);
+
+  // Legend
+  const leg = document.getElementById('powerLegend');
+  leg.innerHTML = '';
+  withPow.forEach(id => {
+    const c = STATE.nodes[id].color;
+    const el = document.createElement('div');
+    el.className = 'legend-item';
+    el.innerHTML = `<div class="legend-swatch" style="background:${c}"></div>${id}`;
+    el.onclick = () => toggleDataset('powerChart', id, el);
+    leg.appendChild(el);
+  });
+
+  // Line chart
+  const datasets = withPow.map(id => ({
+    label: id,
+    data: STATE.nodes[id].powerSeries,
+    borderColor: STATE.nodes[id].color,
+    backgroundColor: STATE.nodes[id].color + '18',
+    borderWidth: 1.5,
+    fill: false,
+    tension: 0.35,
+    pointRadius: 0,
+    pointHoverRadius: 4,
+    spanGaps: true
+  }));
+
+  destroyChart('powerChart');
+  STATE.charts.powerChart = new Chart(document.getElementById('powerChart').getContext('2d'), {
+    type: 'line',
+    data: { labels: STATE.labels, datasets },
+    options: chartOpts({ yLabel: 'mW', title: 'Power (mW)' })
+  });
+
+  // Avg bar chart
+  destroyChart('avgBarChart');
+  STATE.charts.avgBarChart = new Chart(document.getElementById('avgBarChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: withPow,
+      datasets: [{
+        data: withPow.map(id => STATE.nodes[id].stats.avgPow),
+        backgroundColor: withPow.map(id => STATE.nodes[id].color + '55'),
+        borderColor:     withPow.map(id => STATE.nodes[id].color),
+        borderWidth: 1.5,
+        borderRadius: 5
+      }]
+    },
+    options: chartOpts({ yLabel: 'mW', legend: false })
+  });
+
+  // Histogram
+  const allPow = withPow.flatMap(id => Object.values(STATE.nodes[id].powerBuckets).flat());
+  const buckets = Array.from({length:14}, (_,i) => i*10);
+  const hist = buckets.map(b => allPow.filter(v => v >= b && v < b+10).length);
+  const histLabels = buckets.map(b => `${b}-${b+10}`);
+
+  destroyChart('powerHistChart');
+  STATE.charts.powerHistChart = new Chart(document.getElementById('powerHistChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: histLabels,
+      datasets: [{
+        data: hist,
+        backgroundColor: 'rgba(56,189,248,0.25)',
+        borderColor: '#38bdf8',
+        borderWidth: 1,
+        borderRadius: 3
+      }]
+    },
+    options: chartOpts({ yLabel: 'count', legend: false, xRotate: true })
+  });
+}
+
+// ── Radio charts ──────────────────────────────────────────────
+function buildRadioCharts(nodeIds) {
+  // Legend
+  const leg = document.getElementById('radioLegend');
+  leg.innerHTML = '';
+  nodeIds.forEach(id => {
+    const c = STATE.nodes[id].color;
+    const el = document.createElement('div');
+    el.className = 'legend-item';
+    el.innerHTML = `<div class="legend-swatch" style="background:${c}"></div>${id}`;
+    el.onclick = () => toggleDataset('radioChart', id, el);
+    leg.appendChild(el);
+  });
+
+  // Radio events line chart
+  destroyChart('radioChart');
+  STATE.charts.radioChart = new Chart(document.getElementById('radioChart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: STATE.labels,
+      datasets: nodeIds.map(id => ({
+        label: id,
+        data: STATE.nodes[id].radioSeries,
+        borderColor: STATE.nodes[id].color,
+        borderWidth: 1.5,
+        fill: false,
+        tension: 0.3,
+        pointRadius: 0,
+        pointHoverRadius: 3,
+        spanGaps: true
+      }))
+    },
+    options: chartOpts({ yLabel: 'events/min', title: 'Radio events' })
+  });
+
+  // RSSI bar
+  const rssiNodes = nodeIds.filter(id => STATE.nodes[id].stats.avgRSSI !== null);
+  destroyChart('rssiChart');
+  STATE.charts.rssiChart = new Chart(document.getElementById('rssiChart').getContext('2d'), {
+    type: 'bar',
+    data: {
+      labels: rssiNodes,
+      datasets: [{
+        label: 'Avg RSSI (dBm)',
+        data: rssiNodes.map(id => STATE.nodes[id].stats.avgRSSI),
+        backgroundColor: rssiNodes.map(id => STATE.nodes[id].color + '55'),
+        borderColor:     rssiNodes.map(id => STATE.nodes[id].color),
+        borderWidth: 1.5,
+        borderRadius: 5
+      }]
+    },
+    options: chartOpts({ yLabel: 'dBm', legend: false, yMin: -110 })
+  });
+
+  // Heatmap
+  buildHeatmap(nodeIds);
+}
+
+function buildHeatmap(nodeIds) {
+  const cont = document.getElementById('heatmapContainer');
+  if (!nodeIds.length) { cont.innerHTML = '<div class="empty">No radio data</div>'; return; }
+
+  const bucketCount = STATE.maxBucket + 1;
+  const maxVal = Math.max(...nodeIds.flatMap(id =>
+    STATE.nodes[id].radioSeries.filter(v => v !== null)
+  ), 1);
+
+  let html = `<div style="display:flex;gap:6px;align-items:flex-start;overflow-x:auto;">`;
+  html += `<div style="display:flex;flex-direction:column;gap:2px;margin-top:14px;">`;
+  nodeIds.forEach(id => {
+    html += `<div style="height:14px;line-height:14px;font-size:8px;color:var(--muted);white-space:nowrap;padding-right:6px;">${id}</div>`;
+  });
+  html += `</div>`;
+
+  html += `<div style="flex:1;overflow-x:auto;">`;
+  html += `<div style="display:flex;gap:2px;margin-bottom:4px;">`;
+  for (let b = 0; b < bucketCount; b += 5) {
+    html += `<div style="font-size:8px;color:var(--dim);flex:1;text-align:center;">${b}m</div>`;
+  }
+  html += `</div>`;
+
+  nodeIds.forEach(id => {
+    const c = STATE.nodes[id].color;
+    html += `<div style="display:grid;grid-template-columns:repeat(${bucketCount},1fr);gap:2px;margin-bottom:2px;">`;
+    for (let b = 0; b < bucketCount; b++) {
+      const v = STATE.nodes[id].radioSeries[b] || 0;
+      const intensity = Math.min(v / maxVal, 1);
+      html += `<div title="${id} @ ${b}min: ${v} events" style="height:14px;border-radius:2px;background:${c};opacity:${0.05 + intensity*0.95};"></div>`;
+    }
+    html += `</div>`;
+  });
+
+  html += `</div></div>`;
+  cont.innerHTML = html;
+}
+
+// ── Node panel ────────────────────────────────────────────────
+function buildNodePanel(nodeIds) {
+  const map = document.getElementById('nodeMap');
+  map.innerHTML = '';
+
+  nodeIds.forEach((id, i) => {
+    const nd = STATE.nodes[id];
+    const c = nd.color;
+    const s = nd.stats;
+    const pill = document.createElement('div');
+    pill.className = 'node-pill';
+    pill.innerHTML = `
+      <div class="node-dot-wrap">
+        <div class="node-dot" style="border-color:${c};color:${c};background:${c}18;">${id.replace('m3_','')}</div>
+        ${s.hasConsumption ? `<div class="node-ring" style="border-color:${c};animation-delay:${i*0.3}s"></div>` : ''}
+      </div>
+      <div class="node-info">
+        <div class="node-name-lbl">${id}</div>
+        <div class="node-type-lbl">${s.hasConsumption ? 'active · data available' : 'radio only'}</div>
+        <div class="node-stat" style="color:${c}">${s.hasConsumption ? s.avgPow+' mW avg' : s.radioTotal+' radio events'}</div>
+      </div>
+    `;
+    pill.onclick = () => showNodeDetail(id, pill);
+    map.appendChild(pill);
+  });
+
+  // Table
+  const tbl = document.getElementById('nodeTable');
+  tbl.innerHTML = `<thead><tr>
+    ${['Node','Avg mW','Min mW','Max mW','Samples','Radio events','Channel','Avg RSSI','Status']
+      .map(h=>`<th style="text-align:left;padding:6px 10px;font-size:9px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);border-bottom:1px solid var(--border);font-weight:400;">${h}</th>`).join('')}
+  </tr></thead><tbody>${
+    nodeIds.map(id => {
+      const s = STATE.nodes[id].stats;
+      const c = STATE.nodes[id].color;
+      const pct = s.avgPow ? ((s.avgPow / 130)*100).toFixed(0) : 0;
+      return `<tr style="border-bottom:1px solid var(--border)">
+        <td style="padding:8px 10px;color:${c};font-weight:600;">${id}</td>
+        <td style="padding:8px 10px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:60px;height:5px;background:var(--dim);border-radius:3px;overflow:hidden;">
+              <div style="width:${pct}%;height:100%;background:${c};border-radius:3px;"></div>
+            </div>
+            <span style="color:var(--text)">${s.avgPow ?? '—'}</span>
+          </div>
+        </td>
+        <td style="padding:8px 10px;color:var(--muted)">${s.minPow ?? '—'}</td>
+        <td style="padding:8px 10px;color:var(--muted)">${s.maxPow ?? '—'}</td>
+        <td style="padding:8px 10px;color:var(--muted)">${s.samples.toLocaleString()}</td>
+        <td style="padding:8px 10px;color:var(--muted)">${s.radioTotal.toLocaleString()}</td>
+        <td style="padding:8px 10px"><span class="tag tag-blue">CH ${s.channel ?? '—'}</span></td>
+        <td style="padding:8px 10px;color:var(--a3)">${s.avgRSSI ?? '—'} dBm</td>
+        <td style="padding:8px 10px"><span class="tag ${s.hasConsumption?'tag-green':'tag-amber'}">${s.hasConsumption?'active':'radio only'}</span></td>
+      </tr>`;
+    }).join('')
+  }</tbody>`;
+}
+
+function showNodeDetail(id, pill) {
+  document.querySelectorAll('.node-pill').forEach(p => p.classList.remove('selected'));
+  pill.classList.add('selected');
+
+  const nd = STATE.nodes[id];
+  const s = nd.stats;
+  const c = nd.color;
+  const detail = document.getElementById('nodeDetail');
+  const inner  = document.getElementById('nodeDetailInner');
+
+  detail.classList.add('show');
+  inner.innerHTML = `
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">
+      <span style="color:${c};font-weight:600;">${id}</span>
+      &nbsp;·&nbsp; Channel ${s.channel ?? '—'}
+      &nbsp;·&nbsp; IEEE 802.15.4
+      &nbsp;·&nbsp; RSSI avg ${s.avgRSSI ?? '—'} dBm
+    </div>
+    <div class="detail-grid">
+      <div class="detail-kpi">
+        <div class="dk-lbl">Avg power</div>
+        <div class="dk-val" style="color:${c}">${s.avgPow !== null ? s.avgPow+' mW' : 'N/A'}</div>
+      </div>
+      <div class="detail-kpi">
+        <div class="dk-lbl">Min power</div>
+        <div class="dk-val" style="color:${c}">${s.minPow !== null ? s.minPow+' mW' : 'N/A'}</div>
+      </div>
+      <div class="detail-kpi">
+        <div class="dk-lbl">Max power</div>
+        <div class="dk-val" style="color:${c}">${s.maxPow !== null ? s.maxPow+' mW' : 'N/A'}</div>
+      </div>
+      <div class="detail-kpi">
+        <div class="dk-lbl">Radio events</div>
+        <div class="dk-val" style="color:var(--a2)">${s.radioTotal.toLocaleString()}</div>
+      </div>
+      <div class="detail-kpi">
+        <div class="dk-lbl">Power samples</div>
+        <div class="dk-val" style="color:var(--muted)">${s.samples.toLocaleString()}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Logs ─────────────────────────────────────────────────────
+function buildLogs() {
+  const logBox = document.getElementById('logBox');
+  const timeline = document.getElementById('timeline');
+
+  if (!STATE.logLines.length) {
+    logBox.innerHTML = '<div class="empty">No .log files uploaded</div>';
+    timeline.innerHTML = '<div class="empty">No log events found</div>';
+    return;
+  }
+
+  logBox.innerHTML = STATE.logLines.map(l => `
+    <div class="log-line">
+      <span class="log-ts">${l.ts.split(' ')[1]}</span>
+      <span class="log-lvl ${l.level}">${l.level.toUpperCase().slice(0,4)}</span>
+      <span class="log-msg">${escHtml(l.msg)}</span>
+    </div>
+  `).join('');
+
+  const keyEvents = STATE.logLines.filter(l =>
+    l.msg.includes('Start experiment') || l.msg.includes('Stop experiment') ||
+    l.msg.includes('Flash firmware') || l.msg.includes('profile') ||
+    l.msg.includes('ERROR') || l.msg.includes('reset')
+  );
+
+  const tlColors = { 'Start experiment': 'var(--a2)', 'Stop experiment': 'var(--a4)', 'Flash': 'var(--a3)', 'ERROR': 'var(--a4)' };
+  timeline.innerHTML = keyEvents.slice(0, 20).map(l => {
+    const col = Object.keys(tlColors).find(k => l.msg.includes(k)) ? tlColors[Object.keys(tlColors).find(k => l.msg.includes(k))] : 'var(--muted)';
+    return `<div class="tl-item">
+      <span class="tl-time">${l.ts.split(' ')[1]}</span>
+      <div class="tl-dot" style="background:${col}"></div>
+      <span class="tl-text">${escHtml(l.msg)}</span>
+    </div>`;
+  }).join('');
+}
+
+// ── Meta header ───────────────────────────────────────────────
+function buildMeta() {
+  document.getElementById('dashMeta').innerHTML =
+    `<div>Experiment: ${STATE.meta.expId || '—'} · ${STATE.meta.date || ''}</div>
+     <div>${STATE.meta.nodes.join(', ')}</div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  Chart helpers
+// ══════════════════════════════════════════════════════════════
+function chartOpts({ yLabel='', legend=true, yMin=0, xRotate=false }) {
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#131b27',
+        borderColor: 'rgba(56,189,248,0.25)',
+        borderWidth: 1,
+        titleColor: '#64748b',
+        bodyColor: '#e2e8f0',
+        titleFont: { family: 'JetBrains Mono', size: 10 },
+        bodyFont:  { family: 'JetBrains Mono', size: 11 },
+        callbacks: { label: ctx => ` ${ctx.dataset.label}: ${ctx.parsed.y !== null ? ctx.parsed.y : '—'} ${yLabel}` }
+      }
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: '#334155',
+          font: { family: 'JetBrains Mono', size: 9 },
+          maxTicksLimit: 12,
+          maxRotation: xRotate ? 45 : 0
+        },
+        grid: { color: 'rgba(56,189,248,0.04)' }
+      },
+      y: {
+        min: yMin,
+        ticks: { color: '#334155', font: { family: 'JetBrains Mono', size: 9 }, callback: v => v + (yLabel ? ' '+yLabel : '') },
+        grid: { color: 'rgba(56,189,248,0.04)' }
+      }
+    }
+  };
+}
+
+function destroyChart(id) {
+  if (STATE.charts[id]) { STATE.charts[id].destroy(); delete STATE.charts[id]; }
+}
+
+function toggleDataset(chartId, label, el) {
+  const chart = STATE.charts[chartId];
+  if (!chart) return;
+  const ds = chart.data.datasets.find(d => d.label === label);
+  if (!ds) return;
+  ds.hidden = !ds.hidden;
+  el.classList.toggle('off', ds.hidden);
+  chart.update();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  Tabs
+// ══════════════════════════════════════════════════════════════
+function switchTab(name, btn) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════════
+//  Export
+// ══════════════════════════════════════════════════════════════
+function exportChart(canvasId, filename) {
+  const canvas = document.getElementById(canvasId);
+  // Draw with dark bg
+  const tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width  = canvas.width;
+  tmpCanvas.height = canvas.height;
+  const ctx = tmpCanvas.getContext('2d');
+  ctx.fillStyle = '#0d1117';
+  ctx.fillRect(0, 0, tmpCanvas.width, tmpCanvas.height);
+  ctx.drawImage(canvas, 0, 0);
+  const a = document.createElement('a');
+  a.download = filename + '.png';
+  a.href = tmpCanvas.toDataURL('image/png');
+  a.click();
+}
+
+function exportAllPNG() {
+  ['powerChart','avgBarChart','powerHistChart','radioChart','rssiChart'].forEach((id, i) => {
+    if (STATE.charts[id]) {
+      setTimeout(() => exportChart(id, id), i * 200);
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  Reset
+// ══════════════════════════════════════════════════════════════
+function resetApp() {
+  Object.keys(STATE.charts).forEach(k => { STATE.charts[k].destroy(); delete STATE.charts[k]; });
+  STATE.nodes = {}; STATE.logLines = []; STATE.meta = {};
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('hero').style.display = 'flex';
+  fileInput.value = '';
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>
